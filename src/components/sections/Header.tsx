@@ -1,20 +1,36 @@
-import { useState } from "react";
-import styled from "styled-components";
+import { useState, useEffect } from "react";
+import { styled, css } from "styled-components";
 import KvaliLogo from "../../assets/logos/full_logo.svg";
 import { Searchbar } from "../atomic/Searchbar";
 import { Button } from "../atomic/Button";
 import { FiUser } from "react-icons/fi";
 import { BsPiggyBank } from "react-icons/bs";
 
+const SCROLL_ACTIVATION_THRESHOLD = 695;
 
-const HeaderContainer = styled.header`
-  position: sticky;
+const HeaderContainer = styled.header<{ $isFixed: boolean }>`
+  position: static;
+  width: 100%;
   padding: 24px 0px;
   background-color: transparent;
-  /* box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); */
   background-color: #fdf2e9;
 
-  border-bottom: 1px dotted #45260a60;
+  ${props => props.$isFixed && css`
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: white;
+    box-shadow: 0 1.2rem 3.2rem rgba(0, 0, 0, 0.05);
+    z-index: 1000;
+  `}
+`;
+
+const HeaderSpacing = styled.div<{ $isFixed: boolean }>`
+  position: static;
+  width: 100%;
+  height: 96px;
+  display: ${props => props.$isFixed ? "block" : "none"};
 `;
 
 const HeaderNav = styled.nav`
@@ -33,6 +49,14 @@ const HeaderNav = styled.nav`
 
 const CompanyLogo = styled.img`
   height: 36px;
+`;
+
+const HeaderSearchbar = styled(Searchbar)<{ $isFixed: boolean }>`
+ input {
+  ${props => props.$isFixed && css`
+    background-color: white;
+  `}
+ }
 `;
 
 const ButtonsContainer = styled.div`
@@ -63,6 +87,27 @@ const ButtonsContainer = styled.div`
 
 export function Header() {
   const [searchValue, setSearchValue] = useState("");
+  const [showHeader, setShowHeader] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setLastScrollY(window.scrollY);
+      if (window.scrollY >= SCROLL_ACTIVATION_THRESHOLD) {
+        setShowHeader(true);
+      }
+      else {
+        setShowHeader(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [lastScrollY]);
+
 
   const handleSearchChange = (value: string) => {
     setSearchValue(value);
@@ -70,15 +115,18 @@ export function Header() {
   };
 
   return (
-    <HeaderContainer>
+    <>
+    <HeaderSpacing $isFixed={showHeader} />
+    <HeaderContainer $isFixed={showHeader}>
       <HeaderNav>
         <CompanyLogo src={KvaliLogo} alt="Kvali Logo" />
-        <Searchbar value={searchValue} onChange={handleSearchChange} />
+        <HeaderSearchbar $isFixed={showHeader} value={searchValue} onChange={handleSearchChange} />
         <ButtonsContainer>
           <Button className="header-campaign-btn" icon={<BsPiggyBank size={18}/>}>კამპანიის დაწყება</Button>
           <Button className="header-login-btn" icon={<FiUser size={18}/>}>შესვლა</Button>  
         </ButtonsContainer>
       </HeaderNav>
     </HeaderContainer>
+    </>
   );
 }

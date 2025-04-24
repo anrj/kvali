@@ -59,9 +59,10 @@ const SearchWrapper = styled.div`
 interface SearchbarProps {
   value: string;
   onChange: (value: string) => void;
+  className?: string;
 }
 
-export function Searchbar({ value, onChange }: SearchbarProps) {
+export function Searchbar({ value, onChange, className }: SearchbarProps) {
   const showClearButton = value.length > 0;
 
   const handleClear = () => {
@@ -69,7 +70,7 @@ export function Searchbar({ value, onChange }: SearchbarProps) {
   };
 
   return (
-    <SearchWrapper>
+    <SearchWrapper className={className}>
       <SearchBar
         type="search"
         placeholder="ძებნა"

@@ -6,9 +6,10 @@ const HeroSection = styled.section`
   padding: 48px 0 96px 0;
   height: calc(100vh - 80px - 48px - 96px);
   background-color: #fdf2e9;
+  border-top: 1px dotted #45260a60;
 `;
 
-const HeroDiv = styled.div`
+const HeroDiv = styled.div` 
   display: flex;
   flex-direction: row;
   align-items: center;

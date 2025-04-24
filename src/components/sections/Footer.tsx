@@ -116,7 +116,7 @@ export function Footer() {
           </FooterText>
           <p style={{ marginTop: "1.2rem" }}>
             <FooterLink href="tel:+995599533969" >+995 599-533-969</FooterLink> <br />
-            <FooterLink href="mailto:anrijavakhishvili@gmail.com">anrijavakhishvili@gmail.com</FooterLink>
+            <FooterLink href="mailto:contact@kvali.ge">contact@kvali.ge</FooterLink>
           </p>
         </NavColList>
       </NavCol>
@@ -125,6 +125,7 @@ export function Footer() {
         <NavColList>
           <FooterLink>რეგისტრაცია</FooterLink>
           <FooterLink>კამპანიის დაწყება</FooterLink>
+          <FooterLink>კამპანიების ნახვა</FooterLink>
           <FooterLink>Android აპლიკაცია</FooterLink>
         </NavColList>
       </NavCol>
@@ -141,6 +142,7 @@ export function Footer() {
         <FooterHeading>დახმარება</FooterHeading>
         <NavColList>
           <FooterLink>ხშირად დასმული კითხვები</FooterLink>
+          <FooterLink>წერილის მიწერა</FooterLink>
           <FooterLink>ანონიმური უკუკავშირი</FooterLink>
         </NavColList>
       </NavCol>
