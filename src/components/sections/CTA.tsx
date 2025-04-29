@@ -131,7 +131,7 @@ const CTAButton = styled.button`
 
 export function CTAComponent() {
   return (
-    <CTASection>
+    <CTASection id="cta-section">
       <CTAContainer>
         <CTAContent>
           <CTAHeading>Get your first meal for free!</CTAHeading>

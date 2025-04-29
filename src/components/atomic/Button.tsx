@@ -32,15 +32,34 @@ const ButtonIconWrapper = styled.span`
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
   icon?: ReactNode;
+  scrollsTo?: string;
 }
 
 export function Button({
   children,
   icon,
+  scrollsTo,
   ...rest
 }: ButtonProps) {
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    if (scrollsTo) {
+      const element = document.getElementById(scrollsTo);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth"});
+      } else {
+        console.warn(`Element with ID "${scrollsTo}" not found.`);
+      }
+    }
+
+    if (rest.onClick) {
+      rest.onClick(event);
+    }
+  };
+
+
   return (
-    <StyledButton type="button" {...rest}>
+    <StyledButton type="button" {...rest} onClick={handleClick}>
       {icon && <ButtonIconWrapper>{icon}</ButtonIconWrapper>}
       {children}
     </StyledButton>

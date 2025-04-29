@@ -67,16 +67,16 @@ const ButtonsContainer = styled.div`
   gap: 0.75rem;
 
   .header-campaign-btn {
-    background-color: #e67e22;
-    border: 3px solid #e67e22;
+    background-color: #e57e22;
+    padding: 0.675rem 1.15rem;
     transition: background-color 0.2s ease;
     &:hover {
-      background-color: #ff8c26;
+      background-color: #cf711f;
     }
   }
 
   .header-login-btn {
-    border: 3px solid #45260a;
+    padding: 0.675rem 1.15rem;
     transition: background-color 0.2s ease;
     &:hover {
       background-color: #5f340c;
@@ -87,7 +87,7 @@ const ButtonsContainer = styled.div`
 
 export function Header() {
   const [searchValue, setSearchValue] = useState("");
-  const [showHeader, setShowHeader] = useState(true);
+  const [showHeader, setShowHeader] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
 
   useEffect(() => {

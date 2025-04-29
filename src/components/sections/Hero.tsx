@@ -53,10 +53,11 @@ const HeroBody = styled.div`
   }
 
   .hero-viewall-btn {
-    border: 4px solid #e67e22;
-    background-color: #e67e22;
+    padding: 12.75px 0.75rem;
+    background-color: #e57e22;
+    transition: background-color 0.2s ease-in-out;
     &:hover {
-      background-color: #ff8c26;
+      background-color: #cf711f;
     }
   }
 `;
@@ -74,7 +75,7 @@ export function Hero() {
           <p>ერთი სივრცე იდეების რეალობად ქცევისთვის. დაიწყეთ საქველმოქმედო კამპანია ან მოიძიეთ დაფინანსება თქვენი ბიზნესისთვის, სწრაფად და მარტივად.</p>
           <div className="hero-btns">
             <Button className="hero-viewall-btn" icon={<CiViewList size={22}/>}>კამპანიების ნახვა</Button>
-            <Button className="hero-learnmore-btn">მეტის გაგება ↓</Button>
+            <Button className="hero-learnmore-btn" scrollsTo="cta-section">მეტის გაგება ↓</Button>
           </div>
         </HeroBody>
         <HeroImage src="/assets/img/hero-illustration.svg" width={800} height={500}/>
