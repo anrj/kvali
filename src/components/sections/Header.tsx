@@ -6,7 +6,7 @@ import { Button } from "../atomic/Button";
 import { FiUser } from "react-icons/fi";
 import { BsPiggyBank } from "react-icons/bs";
 
-const SCROLL_ACTIVATION_THRESHOLD = 695;
+const SCROLL_ACTIVATION_THRESHOLD = 650;
 
 const HeaderContainer = styled.header<{ $isFixed: boolean }>`
   position: static;
@@ -76,10 +76,11 @@ const ButtonsContainer = styled.div`
   }
 
   .header-login-btn {
+    background-color: #5f340c;
     padding: 0.675rem 1.15rem;
     transition: background-color 0.2s ease;
     &:hover {
-      background-color: #5f340c;
+      background-color: #45260a;
     }
   }
 `;
