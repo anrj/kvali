@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { Button } from "../atomic/Button";
 import { CiViewList } from "react-icons/ci";
+import { useNavigate } from "react-router-dom";
 
 const HeroSection = styled.section`
   padding: 48px 0 96px 0;
@@ -92,6 +93,8 @@ const HeroImage = styled.img`
 `;
 
 export function Hero() {
+  const navigate = useNavigate();
+
   return (
     <HeroSection>
       <HeroDiv>
@@ -99,7 +102,8 @@ export function Hero() {
           <h1>დააფინანსე კეთილი საქმე და განავითარე ბიზნესი — აქ</h1>
           <p>ერთი სივრცე იდეების რეალობად ქცევისთვის. დაიწყეთ საქველმოქმედო კამპანია ან მოიძიეთ დაფინანსება თქვენი ბიზნესისთვის, სწრაფად და მარტივად.</p>
           <div className="hero-btns">
-            <Button className="hero-viewall-btn" icon={<CiViewList size={22}/>}>კამპანიები</Button>
+            {/* TODO: Use Link to navigate instead, reference semantic ui button props */}
+            <Button onClick={() => navigate('/campaigns')} className="hero-viewall-btn" icon={<CiViewList size={22}/>}>კამპანიები</Button>
             <Button className="hero-learnmore-btn" scrollsTo="cta-section">მეტის გაგება ↓</Button>
           </div>
         </HeroBody>

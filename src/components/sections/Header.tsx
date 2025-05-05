@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { styled, css } from "styled-components";
 import KvaliLogo from "../../assets/logos/full_logo.svg";
 import { Searchbar } from "../atomic/Searchbar";
@@ -8,7 +9,7 @@ import { BsPiggyBank } from "react-icons/bs";
 
 const SCROLL_ACTIVATION_THRESHOLD = 650;
 
-const HeaderContainer = styled.header<{ $isFixed: boolean }>`
+const HeaderContainer = styled.header<{ $isFixed?: boolean, $isTransparentPage?: boolean; }>`
   position: static;
   width: 100%;
   padding: 24px 0px;
@@ -23,10 +24,22 @@ const HeaderContainer = styled.header<{ $isFixed: boolean }>`
     background-color: white;
     box-shadow: 0 1.2rem 3.2rem rgba(0, 0, 0, 0.05);
     z-index: 1000;
+
+    ${HeaderSearchbar} input {
+      background-color: white;
+    }
+  `}
+
+  ${props => props.$isTransparentPage && css`
+    background-color: transparent;
+
+    ${HeaderSearchbar} input {
+      background-color: transparent;
+    }
   `}
 `;
 
-const HeaderSpacing = styled.div<{ $isFixed: boolean }>`
+const HeaderSpacing = styled.div<{ $isFixed?: boolean }>`
   position: static;
   width: 100%;
   height: 96px;
@@ -49,14 +62,10 @@ const HeaderNav = styled.nav`
 
 const CompanyLogo = styled.img`
   height: 36px;
+  // add link to homepage
 `;
 
-const HeaderSearchbar = styled(Searchbar)<{ $isFixed: boolean }>`
- input {
-  ${props => props.$isFixed && css`
-    background-color: white;
-  `}
- }
+const HeaderSearchbar = styled(Searchbar)`
 `;
 
 const ButtonsContainer = styled.div`
@@ -88,17 +97,21 @@ const ButtonsContainer = styled.div`
 
 export function Header() {
   const [searchValue, setSearchValue] = useState("");
-  const [showHeader, setShowHeader] = useState(false);
+  const [isFixed, setIsFixed] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const notHomepage = location.pathname != '/';
 
   useEffect(() => {
     const handleScroll = () => {
       setLastScrollY(window.scrollY);
       if (window.scrollY >= SCROLL_ACTIVATION_THRESHOLD) {
-        setShowHeader(true);
+        setIsFixed(true);
       }
       else {
-        setShowHeader(false);
+        setIsFixed(false);
       }
     };
 
@@ -117,11 +130,13 @@ export function Header() {
 
   return (
     <>
-    <HeaderSpacing $isFixed={showHeader} />
-    <HeaderContainer $isFixed={showHeader}>
+    <HeaderSpacing $isFixed={isFixed && !notHomepage} />
+    <HeaderContainer $isFixed={isFixed && !notHomepage} $isTransparentPage={notHomepage}>
       <HeaderNav>
-        <CompanyLogo src={KvaliLogo} alt="Kvali Logo" />
-        <HeaderSearchbar $isFixed={showHeader} value={searchValue} onChange={handleSearchChange} />
+        <Link to="/" style={{ textDecoration: "none" }}>
+          <CompanyLogo src={KvaliLogo} alt="Kvali Logo" />
+        </Link>
+        <HeaderSearchbar value={searchValue} onChange={handleSearchChange} />
         <ButtonsContainer>
           <Button className="header-campaign-btn" icon={<BsPiggyBank size={18}/>}>კამპანიის დაწყება</Button>
           <Button className="header-login-btn" icon={<FiUser size={18}/>}>შესვლა</Button>  

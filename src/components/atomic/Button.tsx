@@ -1,8 +1,6 @@
 import { ButtonHTMLAttributes, ReactNode } from "react";
 import styled from "styled-components";
 
-// button with an icon on its left
-
 const StyledButton = styled.button`
   display: inline-flex;
   align-items: center;
@@ -30,7 +28,7 @@ const ButtonIconWrapper = styled.span`
 `;
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  children: ReactNode;
+  children?: ReactNode;
   icon?: ReactNode;
   scrollsTo?: string;
 }

@@ -12,7 +12,7 @@ const ProgressFill = styled.div<{ progress: number }>`
   height: 100%;
   width: ${props => props.progress}%;
   background-color: #e57e22;
-  background-image: linear-gradient(to right, #e57e22, #eda059);
+  background-image: linear-gradient(to right, #eca666, #e47819);
   border-radius: 5px; 
   transition: width 0.4s ease-in-out; 
   max-width: 100%;
@@ -20,14 +20,15 @@ const ProgressFill = styled.div<{ progress: number }>`
 
 interface ProgressBarProps {
   percentage: number;
+  className?: string;
 }
 
-export function ProgressBar({ percentage }: ProgressBarProps) {
+export function ProgressBar({ percentage, className }: ProgressBarProps) {
   const clampedPercentage = Math.max(0, Math.min(100, percentage));
 
   return (
-    <ProgressBarContainer>
-      <ProgressFill progress={clampedPercentage} />
+    <ProgressBarContainer className={className}>
+      <ProgressFill progress={clampedPercentage}/>
     </ProgressBarContainer>
   );
 }

@@ -1,45 +1,61 @@
 import styled from "styled-components";
 import { ProgressBar } from "./ProgressBar";
-// for dev view only
-const TemporaryDiv = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  min-height: 100vh;
-`;
 
 const CardContainer = styled.div`
-  background-color: #fdf2e9;
-
-  width: 30%;
+  background-color: #ffffff;
   box-sizing: border-box;
 
   padding: 0.875rem;
+  padding-bottom: 1.25rem;
   border-radius: 5px;
-  
 
   display: flex;
   flex-direction: column;
   gap: 0.875rem;
+
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    background-color: #fdf2e9;
+
+    img {
+      transform: scale(1);
+    }
+  }
 `;
 
 const CardBody = styled.div`
-  gap: 0.275rem;
+`;
+
+const ImageWrapper = styled.div`
+  width: 100%;
+  aspect-ratio: 15 / 10;
+  overflow: hidden;
+  position: relative;
+  border-radius: 14px;
+  flex-shrink: 0;
 `;
 
 const CardImage = styled.img`
   width: 100%;
-  height: 70%;
+  height: 100%;
   object-fit: cover;
-  border-radius: 14px;
-  aspect-ratio: 15 / 10; 
+  will-change: transform;
+  transform: scale(1.05);
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 `;
 
 const CardTitle = styled.span`
   font-weight: 500;
-  font-size: 1.225rem;
+  font-size: 1.075rem;
   color: #0a0a0a;
+  line-height: 1.4;
+  height: 2.8em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const MoneyRaised = styled.span`
@@ -52,28 +68,40 @@ const MoneyRaised = styled.span`
   }
 `;
 
+const CardProgressBar = styled(ProgressBar)`
+  margin-top: 0.775rem;
+  margin-bottom: 0.125rem;
+`;
+
 interface CardProps {
-  imageSrc: string,
-  title: string,
-  barPercentage: number,
+  imageSrc: string;
+  title: string;
+  barPercentage: number;
   moneyRaised: number;
 }
 
-export function Card({ imageSrc, title, barPercentage, moneyRaised }: CardProps) { 
+export function Card({
+  imageSrc,
+  title,
+  barPercentage,
+  moneyRaised,
+}: CardProps) {
   return (
     <>
-      <TemporaryDiv>
-        <CardContainer>
+      <CardContainer>
+        <ImageWrapper>
           <CardImage src={imageSrc}></CardImage>
-          <CardBody>
-            <CardTitle>{title}</CardTitle>
-            <div style={{ marginTop: "0.775rem", marginBottom: "0.125rem" }}>
-              <ProgressBar percentage={barPercentage} />
-            </div>
-            <MoneyRaised> შეგროვდა <span>₾</span>{moneyRaised}</MoneyRaised>
-          </CardBody>
-        </CardContainer>
-      </TemporaryDiv>
+        </ImageWrapper>
+        <CardBody>
+          <CardTitle>{title}</CardTitle>
+          <CardProgressBar percentage={barPercentage} />
+          <MoneyRaised>
+            {" "}
+            შეგროვდა <span>₾</span>
+            {moneyRaised}
+          </MoneyRaised>
+        </CardBody>
+      </CardContainer>
     </>
   );
 }
