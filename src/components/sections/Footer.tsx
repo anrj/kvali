@@ -2,6 +2,7 @@ import { styled, css } from "styled-components";
 import KvaliLogo from "../../assets/logos/full_logo.svg";
 import { IoLogoInstagram, IoLogoFacebook } from "react-icons/io5";
 import { FaXTwitter } from "react-icons/fa6";
+import { NavLink } from "react-router-dom";
 
 const currentYear = new Date().getFullYear();
 
@@ -37,7 +38,7 @@ const NavColList = styled.ul`
   gap: 1.2rem;
 `;
 
-const FooterLink = styled.a`
+const LinkStyle = css`
   text-decoration: none;
   color: #767676;
   will-change: color;
@@ -48,6 +49,14 @@ const FooterLink = styled.a`
     color: #555555;
   }
 `;
+const FooterLink = styled(NavLink)`
+  ${LinkStyle}
+`;
+
+const ContactLink = styled.a`
+  ${LinkStyle}
+`;
+
 
 const FooterText = styled.p`
   text-decoration: none;
@@ -115,8 +124,8 @@ export function Footer() {
             Akhalgazrdoba Ave. <br /> Lane 5/7, Kutaisi, Georgia
           </FooterText>
           <p style={{ marginTop: "1.2rem" }}>
-            <FooterLink href="tel:+995599533969" >+995 599-533-969</FooterLink> <br />
-            <FooterLink href="mailto:contact@kvali.ge">contact@kvali.ge</FooterLink>
+            <ContactLink href="tel:+995599533969" >+995 599-533-969</ContactLink> <br />
+            <ContactLink href="mailto:contact@kvali.ge">contact@kvali.ge</ContactLink>
           </p>
         </NavColList>
       </NavCol>
@@ -125,7 +134,7 @@ export function Footer() {
         <NavColList>
           <FooterLink>რეგისტრაცია</FooterLink>
           <FooterLink>კამპანიის დაწყება</FooterLink>
-          <FooterLink>კამპანიების ნახვა</FooterLink>
+          <FooterLink to="/campaigns">კამპანიების ნახვა</FooterLink>
           <FooterLink>Android აპლიკაცია</FooterLink>
         </NavColList>
       </NavCol>

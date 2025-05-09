@@ -99,7 +99,7 @@ export function Header() {
   const [searchValue, setSearchValue] = useState("");
   const [isFixed, setIsFixed] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const location = useLocation();
 
   const notHomepage = location.pathname != '/';

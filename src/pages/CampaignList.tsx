@@ -1,3 +1,5 @@
+import { useState, useEffect } from "react";
+import supabase from "../utils/supabase.ts";
 import styled from "styled-components";
 import { Card } from "../components/atomic/Card";
 import { Button } from "../components/atomic/Button";
@@ -19,6 +21,7 @@ const FilterRow = styled.div`
 `;
 
 const FilterButton = styled(Button)`
+  // ADD A SIDEBAR FOR FILTERING OPTIONS
   padding: 0.5rem;
   margin-left: 5.5rem;
   background-color: #e0e0e0;
@@ -27,7 +30,7 @@ const FilterButton = styled(Button)`
 
   &:hover {
     background-color: #d0d0d0;
-  } 
+  }
 `;
 
 const TabGroup = styled.div`
@@ -46,7 +49,8 @@ const TabButton = styled(Button)`
     background-color: #5c320e;
   }
 
-  &:focus, &:active {
+  &:focus,
+  &:active {
     background-color: #f3bf92;
     color: #555555;
   }
@@ -61,38 +65,57 @@ const CampaignListContainer = styled.div`
   margin: 0rem 4.6rem;
 `;
 
+interface Campaign {
+  id: number;
+  title: string;
+  current_amount: number;
+  goal_amount: number;
+  thumbnail_url: string;
+}
+
 export default function CampaignList() {
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+
+  useEffect(() => {
+    async function fetchCampaigns() {
+      const { data, error } = await supabase.from("campaigns").select("*");
+
+      if (error) {
+        console.error("Error fetching campaigns:", error);
+      } else {
+        setCampaigns(data || []);
+      }
+    }
+    fetchCampaigns();
+  }, []);
+
   return (
     <>
-    <CampaignsPage>
-      <FilterRow>
-        <FilterButton icon={<RiListSettingsLine size={16}/>}></FilterButton>
-        <TabGroup>
-          <TabButton>ქველმოქმედება</TabButton>
-          <TabButton>ბიზნესი</TabButton>
-          <TabButton>სხვა</TabButton>
-        </TabGroup>
-      </FilterRow>
-      <CampaignListContainer>
-        <Card imageSrc="/assets/img/test.jpg" title="დამეხმარე" barPercentage={12} moneyRaised={5000} />
-        <Card imageSrc="/assets/img/test.jpg" title="დამეხმარე ავიდე სილვერში და დავამარცხო ალეგაციები" barPercentage={88} moneyRaised={223} />
-        <Card imageSrc="/assets/img/test2.jpg" title="მომეცი ფული ფული მომეცი ფული მინდა ფული ჩამირიცხე ფული" barPercentage={56} moneyRaised={300} />
-        <Card imageSrc="/assets/img/test.jpg" title="ტესტი" barPercentage={24} moneyRaised={3455} />
-        <Card imageSrc="/assets/img/test.jpg" title="ტესტი" barPercentage={37} moneyRaised={107.80} />
-        <Card imageSrc="/assets/img/test.jpg" title="ტესტი" barPercentage={43} moneyRaised={40000} />
-        <Card imageSrc="/assets/img/test.jpg" title="ტესტი" barPercentage={89} moneyRaised={2567} />
-        <Card imageSrc="/assets/img/test.jpg" title="ტესტი" barPercentage={3} moneyRaised={567} />
-        <Card imageSrc="/assets/img/test.jpg" title="ტესტი" barPercentage={3} moneyRaised={567} />
-        <Card imageSrc="/assets/img/test.jpg" title="ტესტი" barPercentage={3} moneyRaised={567} />
-        <Card imageSrc="/assets/img/test.jpg" title="ტესტი" barPercentage={3} moneyRaised={567} />
-        <Card imageSrc="/assets/img/test.jpg" title="ტესტი" barPercentage={3} moneyRaised={567} />
-        <Card imageSrc="/assets/img/test2.jpg" title="მომეცი ფული ფული მომეცი ფული მინდა ფული ჩამირიცხე ფული" barPercentage={56} moneyRaised={300} />
-        <Card imageSrc="/assets/img/test.jpg" title="ტესტი" barPercentage={24} moneyRaised={3455} />
-        <Card imageSrc="/assets/img/test.jpg" title="ტესტი" barPercentage={37} moneyRaised={107.80} />
-        <Card imageSrc="/assets/img/test.jpg" title="ტესტი" barPercentage={43} moneyRaised={40000} />
-        <Card imageSrc="/assets/img/test.jpg" title="ტესტი" barPercentage={89} moneyRaised={2567} />
-      </CampaignListContainer>
-    </CampaignsPage>
+      <CampaignsPage>
+        <FilterRow>
+          <FilterButton icon={<RiListSettingsLine size={16} />}></FilterButton>
+          <TabGroup>
+            <TabButton>ქველმოქმედება</TabButton>
+            <TabButton>ბიზნესი</TabButton>
+            <TabButton>სხვა</TabButton>
+          </TabGroup>
+        </FilterRow>
+        <CampaignListContainer>
+          {campaigns.map((campaign) => (
+            <Card
+              key={campaign.id}
+              title={campaign.title}
+              imageSrc={campaign.thumbnail_url}
+              moneyRaised={campaign.current_amount}
+              barPercentage={
+                Math.round(
+                  (campaign.current_amount / campaign.goal_amount) * 10000
+                ) / 100
+              }
+            />
+          ))}
+        </CampaignListContainer>
+      </CampaignsPage>
     </>
   );
-};
+}
