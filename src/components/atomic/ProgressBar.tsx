@@ -8,9 +8,9 @@ const ProgressBarContainer = styled.div`
   overflow: hidden;
 `;
 
-const ProgressFill = styled.div<{ progress: number }>`
+const ProgressFill = styled.div<{ $percentage: number }>`
   height: 100%;
-  width: ${props => props.progress}%;
+  width: ${props => props.$percentage}%;
   background-color: #e57e22;
   background-image: linear-gradient(to right, #eca666, #e47819);
   border-radius: 5px; 
@@ -28,7 +28,7 @@ export function ProgressBar({ percentage, className }: ProgressBarProps) {
 
   return (
     <ProgressBarContainer className={className}>
-      <ProgressFill progress={clampedPercentage}/>
+      <ProgressFill $percentage={clampedPercentage}/>
     </ProgressBarContainer>
   );
 }

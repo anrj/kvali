@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { Card } from "../components/atomic/Card";
 import { Button } from "../components/atomic/Button";
 import { RiListSettingsLine } from "react-icons/ri";
+import SkeletonCard from "../components/atomic/SkeletonCard.tsx";
 
 const CampaignsPage = styled.div`
   min-height: 100vh;
@@ -75,19 +76,31 @@ interface Campaign {
 
 export default function CampaignList() {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function fetchCampaigns() {
-      const { data, error } = await supabase.from("campaigns").select("*");
+      setIsLoading(true);
+      const { data, error } = await supabase
+        .from("campaigns")
+        .select("id, title, thumbnail_url, current_amount, goal_amount");
 
       if (error) {
         console.error("Error fetching campaigns:", error);
       } else {
         setCampaigns(data || []);
       }
+      setIsLoading(false);
     }
     fetchCampaigns();
   }, []);
+
+  const renderSkeletons = () => {
+    const skeletonCount = 5;
+    return Array.from({ length: skeletonCount }).map((_, index) => (
+      <SkeletonCard key={`skeleton-${index}`} />
+    ));
+  };
 
   return (
     <>
@@ -101,19 +114,21 @@ export default function CampaignList() {
           </TabGroup>
         </FilterRow>
         <CampaignListContainer>
-          {campaigns.map((campaign) => (
-            <Card
-              key={campaign.id}
-              title={campaign.title}
-              imageSrc={campaign.thumbnail_url}
-              moneyRaised={campaign.current_amount}
-              barPercentage={
-                Math.round(
-                  (campaign.current_amount / campaign.goal_amount) * 10000
-                ) / 100
-              }
-            />
-          ))}
+          {isLoading
+            ? renderSkeletons()
+            : campaigns.map((campaign) => (
+                <Card
+                  key={campaign.id}
+                  title={campaign.title}
+                  imageSrc={campaign.thumbnail_url}
+                  moneyRaised={campaign.current_amount}
+                  barPercentage={
+                    Math.round(
+                      (campaign.current_amount / campaign.goal_amount) * 10000
+                    ) / 100
+                  }
+                />
+              ))}
         </CampaignListContainer>
       </CampaignsPage>
     </>
