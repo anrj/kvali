@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useLocation, Link } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import { styled, css } from "styled-components";
-import KvaliLogo from "../../assets/logos/full_logo.svg";
+import KvaliLogo from "/assets/logos/full_logo.svg";
 import { Searchbar } from "../atomic/Searchbar";
-import { Button } from "../atomic/Button";
+import Button from "../atomic/Button";
 import { FiUser } from "react-icons/fi";
 import { BsPiggyBank } from "react-icons/bs";
+import { useNavigate } from "react-router-dom";
 
 const SCROLL_ACTIVATION_THRESHOLD = 650;
 
@@ -89,7 +90,7 @@ const ButtonsContainer = styled.div`
     padding: 0.675rem 1.15rem;
     transition: background-color 0.2s ease;
     &:hover {
-      background-color: #45260a;
+    background-color: #45260a;
     }
   }
 `;
@@ -99,8 +100,8 @@ export function Header() {
   const [searchValue, setSearchValue] = useState("");
   const [isFixed, setIsFixed] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
-  // const navigate = useNavigate();
   const location = useLocation();
+  const navigate = useNavigate();
 
   const notHomepage = location.pathname != '/';
 
@@ -139,7 +140,7 @@ export function Header() {
         <HeaderSearchbar value={searchValue} onChange={handleSearchChange} />
         <ButtonsContainer>
           <Button className="header-campaign-btn" icon={<BsPiggyBank size={18}/>}>კამპანიის დაწყება</Button>
-          <Button className="header-login-btn" icon={<FiUser size={18}/>}>შესვლა</Button>  
+          <Button className="header-login-btn" onClick={() => navigate('/sign-in')} icon={<FiUser size={18}/>}>შესვლა</Button>  
         </ButtonsContainer>
       </HeaderNav>
     </HeaderContainer>

@@ -12,9 +12,10 @@ const StyledButton = styled.button`
   font-size: 0.875rem;
   font-family: inherit;
   font-weight: 400;
+  transition: background-color 0.1s ease;
   cursor: pointer;
 
-  background-color: #45260a;
+  background-color: #5f340c;
   color: floralwhite;
 
   &:focus {
@@ -29,11 +30,11 @@ const ButtonIconWrapper = styled.span`
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children?: ReactNode;
-  icon?: ReactNode;
+  icon?: ReactNode | string;
   scrollsTo?: string;
 }
 
-export function Button({
+export default function Button({
   children,
   icon,
   scrollsTo,
@@ -55,10 +56,18 @@ export function Button({
     }
   };
 
+  let iconElement: ReactNode = null;
+  if (icon) {
+    if (typeof icon === 'string') {
+      iconElement = <img src={icon} alt="" style={{ height: '1.5em', width: 'auto', display: 'block' }} />;
+    } else {
+      iconElement = icon;
+    }
+  }
 
   return (
     <StyledButton type="button" {...rest} onClick={handleClick}>
-      {icon && <ButtonIconWrapper>{icon}</ButtonIconWrapper>}
+      {iconElement && <ButtonIconWrapper>{iconElement}</ButtonIconWrapper>}
       {children}
     </StyledButton>
   );

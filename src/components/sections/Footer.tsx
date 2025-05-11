@@ -1,5 +1,5 @@
 import { styled, css } from "styled-components";
-import KvaliLogo from "../../assets/logos/full_logo.svg";
+import KvaliLogo from "/assets/logos/full_logo.svg";
 import { IoLogoInstagram, IoLogoFacebook } from "react-icons/io5";
 import { FaXTwitter } from "react-icons/fa6";
 import { NavLink } from "react-router-dom";

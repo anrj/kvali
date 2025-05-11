@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Button } from "../atomic/Button";
+import Button from "../atomic/Button";
 import { CiViewList } from "react-icons/ci";
 import { useNavigate } from "react-router-dom";
 

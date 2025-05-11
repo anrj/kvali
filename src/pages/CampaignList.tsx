@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import supabase from "../utils/supabase.ts";
 import styled from "styled-components";
 import { Card } from "../components/atomic/Card";
-import { Button } from "../components/atomic/Button";
+import Button from "../components/atomic/Button";
 import { RiListSettingsLine } from "react-icons/ri";
 import SkeletonCard from "../components/atomic/SkeletonCard.tsx";
 
