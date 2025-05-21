@@ -10,6 +10,7 @@ const StyledButton = styled.button`
   border-radius: 0.5rem;
   border: none;
   font-size: 0.875rem;
+  white-space: nowrap;
   font-family: inherit;
   font-weight: 400;
   transition: background-color 0.1s ease;
@@ -20,6 +21,11 @@ const StyledButton = styled.button`
 
   &:focus {
     outline: none;
+  }
+
+  &:disabled {
+    background-color: #d3d3d3;
+    cursor: not-allowed;
   }
 `;
 

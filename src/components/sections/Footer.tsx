@@ -1,5 +1,5 @@
 import { styled, css } from "styled-components";
-import KvaliLogo from "/assets/logos/full_logo.svg";
+import KvaliLogo from "/logos/full_logo.svg";
 import { IoLogoInstagram, IoLogoFacebook } from "react-icons/io5";
 import { FaXTwitter } from "react-icons/fa6";
 import { NavLink } from "react-router-dom";
@@ -135,7 +135,7 @@ export function Footer() {
           <FooterLink>რეგისტრაცია</FooterLink>
           <FooterLink>კამპანიის დაწყება</FooterLink>
           <FooterLink to="/campaigns">კამპანიების ნახვა</FooterLink>
-          <FooterLink>Android აპლიკაცია</FooterLink>
+          <FooterLink to="/404">Android აპლიკაცია</FooterLink>
         </NavColList>
       </NavCol>
       <NavCol>

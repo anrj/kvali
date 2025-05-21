@@ -5,10 +5,12 @@ import { useNavigate } from "react-router-dom";
 
 const HeroSection = styled.section`
   padding: 48px 0 96px 0;
-  height: calc(100vh - 80px - 48px - 96px); // entire viewport height minus header and padding
+  height: calc(
+    100vh - 80px - 48px - 96px
+  ); // entire viewport height minus header and padding
   background-color: #fdf2e9;
   border-top: 1px dotted #45260a60;
-  
+
   @media (max-width: 768px) {
     flex-flow: wrap-reverse;
 
@@ -29,7 +31,7 @@ const HeroSection = styled.section`
   } */
 `;
 
-const HeroDiv = styled.div` 
+const HeroDiv = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -43,7 +45,7 @@ const HeroBody = styled.div`
   color: #140e0e;
 
   h1 {
-    font-family: 'Noto Serif Georgian', 'TBCX', sans-serif;
+    font-family: "Noto Serif Georgian", "TBCX", sans-serif;
   }
 
   p {
@@ -61,22 +63,42 @@ const HeroBody = styled.div`
   }
 
   .hero-learnmore-btn {
+    position: relative;
+    overflow: hidden;
     background-color: white;
-    padding: 10.75px 0.75rem;
-    border: 2px solid white;
+    box-sizing: border-box;
+    padding: 13px 1rem;
     color: #222222;
     font-weight: 500;
     font-size: 1rem;
-    transition: background-color 0.2s ease-in-out;
-    
+    z-index: 1;
 
-    &:hover {
+    &::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      background-color: white;
+      border-radius: 6px;
+      z-index: 0;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    &:hover::before {
+      inset: 3px;
       background-color: #fdf2e9;
+    }
+
+    span {
+      position: relative;
+      z-index: 1;
     }
   }
 
   .hero-viewall-btn {
-    padding: 12.5px 0.75rem;
+    padding: 13px 0.75rem;
     background-color: #e57e22;
     font-size: 1rem;
     transition: background-color 0.2s ease-in-out;
@@ -100,14 +122,26 @@ export function Hero() {
       <HeroDiv>
         <HeroBody id="hero-body">
           <h1>დააფინანსე კეთილი საქმე და განავითარე ბიზნესი — აქ</h1>
-          <p>ერთი სივრცე იდეების რეალობად ქცევისთვის. დაიწყეთ საქველმოქმედო კამპანია ან მოიძიეთ დაფინანსება თქვენი ბიზნესისთვის, სწრაფად და მარტივად.</p>
+          <p>
+            ერთი სივრცე იდეების რეალობად ქცევისთვის. დაიწყეთ საქველმოქმედო
+            კამპანია ან მოიძიეთ დაფინანსება თქვენი ბიზნესისთვის, სწრაფად და
+            მარტივად.
+          </p>
           <div className="hero-btns">
             {/* TODO: Use Link to navigate instead, reference semantic ui button props */}
-            <Button onClick={() => navigate('/campaigns')} className="hero-viewall-btn" icon={<CiViewList size={22}/>}>კამპანიები</Button>
-            <Button className="hero-learnmore-btn" scrollsTo="cta-section">მეტის გაგება ↓</Button>
+            <Button
+              onClick={() => navigate("/campaigns")}
+              className="hero-viewall-btn"
+              icon={<CiViewList size={22} />}
+            >
+              კამპანიები
+            </Button>
+            <Button className="hero-learnmore-btn" scrollsTo="cta-section">
+              <span>მეტის გაგება ↓</span>
+            </Button>
           </div>
         </HeroBody>
-        <HeroImage id="hero-img" src="/assets/img/hero-illustration.svg"/>
+        <HeroImage id="hero-img" src="/img/hero-illustration.svg" />
       </HeroDiv>
     </HeroSection>
   );

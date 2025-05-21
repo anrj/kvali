@@ -1,9 +1,8 @@
 import styled from "styled-components";
-import  Piggy404  from "/assets/img/piggy404.svg";
+import  Piggy404  from "/img/piggy404.svg";
 // import { Button } from "../components/atomic/Button";
 
 const NotFoundPage = styled.div`
-  min-height: 100vh;
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -16,7 +15,7 @@ const NotFoundContainer = styled.div`
   align-items: center;
   gap: 1rem;
   margin: 2.4rem;
-  padding: 6.8rem 2.4rem 6.8rem 2.4rem;
+  padding: 2.4rem;
 
 `;
 

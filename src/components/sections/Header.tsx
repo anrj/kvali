@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation, Link } from "react-router-dom";
 import { styled, css } from "styled-components";
-import KvaliLogo from "/assets/logos/full_logo.svg";
+import KvaliLogo from "/logos/full_logo.svg";
 import { Searchbar } from "../atomic/Searchbar";
 import Button from "../atomic/Button";
 import { FiUser } from "react-icons/fi";
@@ -35,7 +35,7 @@ const HeaderContainer = styled.header<{ $isFixed?: boolean, $isTransparentPage?:
     background-color: transparent;
 
     ${HeaderSearchbar} input {
-      background-color: transparent;
+      background-color: transparent; 
     }
   `}
 `;
@@ -107,15 +107,17 @@ export function Header() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setLastScrollY(window.scrollY);
-      if (window.scrollY >= SCROLL_ACTIVATION_THRESHOLD) {
+      const currentScrollY = window.scrollY;
+      if (currentScrollY >= SCROLL_ACTIVATION_THRESHOLD) {
         setIsFixed(true);
       }
       else {
         setIsFixed(false);
       }
+      
+      setLastScrollY(currentScrollY);
     };
-
+    
     window.addEventListener("scroll", handleScroll);
 
     return () => {
@@ -140,7 +142,7 @@ export function Header() {
         <HeaderSearchbar value={searchValue} onChange={handleSearchChange} />
         <ButtonsContainer>
           <Button className="header-campaign-btn" icon={<BsPiggyBank size={18}/>}>კამპანიის დაწყება</Button>
-          <Button className="header-login-btn" onClick={() => navigate('/sign-in')} icon={<FiUser size={18}/>}>შესვლა</Button>  
+          <Button className="header-login-btn" onClick={() => navigate('/login')} icon={<FiUser size={18}/>}>შესვლა</Button>  
         </ButtonsContainer>
       </HeaderNav>
     </HeaderContainer>

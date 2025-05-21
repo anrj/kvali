@@ -29,11 +29,17 @@ const SearchBar = styled.input`
   border: 1px solid rgb(202 202 204);
   width: 100%;
   color: rgb(34 34 34);
-  font-size: 1rem;
+  transition: border-color 0.2s ease;
 
+  font-size: 1rem;
   font-weight: 500;
   font-size: 0.875rem;
   font-family: "TBCX", sans-serif;
+
+  &:hover {
+    border-color: rgb(147 149 155);
+  }
+
 
   &:focus {
     outline: none;
