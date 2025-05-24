@@ -1,10 +1,11 @@
-import { useState, FormEvent } from "react";
+import { useState, FormEvent, useEffect } from "react";
 import supabase from "../utils/supabase";
 import styled from "styled-components";
 import KvaliLogoHand from "/logos/hand_logo_orange.svg";
 import Button from "../components/atomic/Button";
 import Input from "../components/atomic/Input";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 
 const SignInPageBackground = styled.div`
   display: flex;
@@ -17,7 +18,7 @@ const SignInPageBackground = styled.div`
       rgba(233, 139, 56, 0.8),
       rgba(233, 139, 56, 0.8)
     ),
-    url("/img/signin-background.png");
+    url("/img/signin-background.webp");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -154,12 +155,31 @@ const ForgotPassword = styled(Link)`
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (user) {
+      navigate("/campaigns");
+    }
+  }, [user, navigate]);
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+    if (error) setError("");
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+    if (error) setError("");
+  };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-  
+    setError("");
+
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -167,9 +187,13 @@ export default function LoginPage() {
 
     if (error) {
       console.error("Error signing in:", error.message);
+      if (error.message === "Invalid login credentials") {
+        setError("ელ.ფოსტა ან პაროლი არასწორია");
+      } else {
+        setError("შესვლისას მოხდა შეცდომა");
+      }
     } else {
       console.log("Successfully signed in");
-      navigate("/campaigns");
     }
   };
 
@@ -199,8 +223,23 @@ export default function LoginPage() {
             <OrLine />
           </OrDiv>
           <SignInBody noValidate onSubmit={handleSubmit}>
-            <InputField name="email" type="text" placeholder="ელ.ფოსტა" onChange={(e) => setEmail(e.target.value)} value={email}/>
-            <InputField name="password" type="password" placeholder="პაროლი" onChange={(e) => setPassword(e.target.value)} value={password}/>
+            <InputField
+              name="email"
+              type="text"
+              placeholder="ელ.ფოსტა"
+              onChange={handleEmailChange}
+              value={email}
+              hasError={!!error}
+              errorMessage={error}
+            />
+            <InputField
+              name="password"
+              type="password"
+              placeholder="პაროლი"
+              onChange={handlePasswordChange}
+              value={password}
+              hasError={!!error}
+            />
             <ForgotPassword to="/404">დაგავიწყდათ პაროლი?</ForgotPassword>
             <SubmitButton type="submit">შესვლა</SubmitButton>
           </SignInBody>

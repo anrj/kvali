@@ -1,10 +1,12 @@
-import { useState, FormEvent, ChangeEvent } from "react";
+import { useState, useEffect, FormEvent, ChangeEvent } from "react";
 import supabase from "../utils/supabase";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import KvaliLogoHand from "/logos/hand_logo_orange.svg";
 import Button from "../components/atomic/Button";
 import Input from "../components/atomic/Input";
+import Checkbox from "../components/atomic/Checkbox";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 
 const SignInPageBackground = styled.div`
   display: flex;
@@ -17,7 +19,7 @@ const SignInPageBackground = styled.div`
       rgba(233, 139, 56, 0.8),
       rgba(233, 139, 56, 0.8)
     ),
-    url("/img/signin-background.png");
+    url("/img/signin-background.webp");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -88,46 +90,6 @@ const Checkboxes = styled.div`
   gap: 0.5rem;
 `;
 
-// create a seperate component
-const CheckboxDiv = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-const Checkbox = styled.input.attrs({ type: "checkbox" })<{ notCheckedOnSubmit?: boolean }>`
-  appearance: none;
-  padding: 8px;
-  border-radius: 3px;
-  background-color: transparent;
-  border: 1px solid #dad8d4;
-  margin: 0;
-  flex: 0 0 auto;
-
-  &:checked {
-    background-image: url("/img/checkbox-cmark.png");
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 12px;
-  }
-
-  &:hover:not(:has(properties(notCheckedonSubmit))) {
-    cursor: pointer;
-    border: 1px solid #bbbbbb;
-  }
-
-  ${props => props.notCheckedOnSubmit && css`
-    border-color: #e8aea8;
-    box-shadow: 0 0 0 2px #e8aaa46f;
-  `}
-`;
-
-const Checkboxlabel = styled.label`
-  font-weight: 300;
-  font-size: 11px;
-  letter-spacing: 2%;
-  user-select: none;
-`;
-
 const RouterLink = styled(Link)`
   text-decoration: underline;
   color: #140e0e;
@@ -156,6 +118,8 @@ interface FormErrors {
 
 export default function RegisterPage() {
   const navigate = useNavigate();
+  const { user } = useAuth();
+
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -175,6 +139,12 @@ export default function RegisterPage() {
     checkbox1: { error: false, message: "" },
     checkbox2: { error: false, message: "" },
   });
+
+  useEffect(() => {
+    if (user) {
+      navigate("/campaigns");
+    }
+  }, [user, navigate]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const { name, value, checked } = e.target;
@@ -303,7 +273,8 @@ export default function RegisterPage() {
     }
     if (data) {
       console.log("User registered successfully:", data);
-      // navigate to where left off, campaign list for now
+
+      //TODO: navigate to where left off, campaign list for now
       navigate("/campaigns");
     }
   };
@@ -369,28 +340,26 @@ export default function RegisterPage() {
               errorMessage={errors.confirmPassword.message}
             />
             <Checkboxes>
-              <CheckboxDiv>
-                <Checkbox id="checkbox1" name="checkbox1" onChange={handleChange} notCheckedOnSubmit={errors.checkbox1.error}/>
-                <Checkboxlabel
-                  htmlFor="checkbox1"
-                  style={{ marginLeft: "0.5rem" }}
-                >
-                  ვეთანხმები{" "}
-                  <RouterLink to="/404">წესებსა და პირობებს</RouterLink>
-                </Checkboxlabel>
-              </CheckboxDiv>
-              <CheckboxDiv>
-                <Checkbox id="checkbox2" name="checkbox2" onChange={handleChange} notCheckedOnSubmit={errors.checkbox2.error}/>
-                <Checkboxlabel
-                  htmlFor="checkbox2"
-                  style={{ marginLeft: "0.5rem" }}
-                >
-                  ვეთანხმები{" "}
-                  <RouterLink to="/404">
-                    კონფიდენციალურობის პოლიტიკას
-                  </RouterLink>
-                </Checkboxlabel>
-              </CheckboxDiv>
+              <Checkbox
+                id="checkbox1"
+                name="checkbox1"
+                checked={formData.checkbox1}
+                onChange={handleChange}
+                hasError={errors.checkbox1.error}
+              >
+                ვეთანხმები{" "}
+                <RouterLink to="/404">წესებსა და პირობებს</RouterLink>
+              </Checkbox>
+              <Checkbox
+                id="checkbox2"
+                name="checkbox2"
+                checked={formData.checkbox2}
+                onChange={handleChange}
+                hasError={errors.checkbox2.error}
+              >
+                ვეთანხმები{" "}
+                <RouterLink to="/404">კონფიდენციალურობის პოლიტიკას</RouterLink>
+              </Checkbox>
             </Checkboxes>
             <SubmitButton style={{ marginTop: "1rem" }} type="submit">
               შესვლა

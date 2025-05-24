@@ -46,6 +46,9 @@ const HeroBody = styled.div`
 
   h1 {
     font-family: "Noto Serif Georgian", "TBCX", sans-serif;
+    font-size: 3.2rem;
+    margin: 0 0 1.6rem 0;
+    line-height: 1.1;
   }
 
   p {
@@ -111,7 +114,7 @@ const HeroBody = styled.div`
 const HeroImage = styled.img`
   margin-right: 2rem;
   width: 800px;
-  height: 500px;
+  height: 450px;
 `;
 
 export function Hero() {
@@ -141,7 +144,7 @@ export function Hero() {
             </Button>
           </div>
         </HeroBody>
-        <HeroImage id="hero-img" src="/img/hero-illustration.svg" />
+        <HeroImage id="hero-img" src="/img/hero-illustration.webp" />
       </HeroDiv>
     </HeroSection>
   );

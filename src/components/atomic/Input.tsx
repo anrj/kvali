@@ -40,7 +40,7 @@ const InputWrapper = styled.div`
 `;
 
 
-const StyledInput = styled.input<{ hasError?: boolean }>`
+const StyledInput = styled.input<{ $hasError?: boolean }>`
   ${InputCSS}
 
   &::placeholder {
@@ -50,7 +50,7 @@ const StyledInput = styled.input<{ hasError?: boolean }>`
   
   &:hover {
     transition: border 0.2s ease;
-    border: ${props => props.hasError ? '1px solid #e8aea8' : '1px solid #bbbbbb'};
+    border: ${props => props.$hasError ? '1px solid #e8aea8' : '1px solid #bbbbbb'};
   }
 
   &:focus {
@@ -60,7 +60,7 @@ const StyledInput = styled.input<{ hasError?: boolean }>`
     transition: box-shadow 0.2s ease-in, border-color 0.2s ease-in;
   }
 
-  ${props => props.hasError && css`
+  ${props => props.$hasError && css`
     border-color: #e8aea8;
     box-shadow: inset 0 0 0 2px #e8aaa46f;
   `}
@@ -113,7 +113,7 @@ export default function Input({ className, type, hasError, errorMessage, ...rest
     <InputWrapper className={className}>
       <StyledInput
         type={inputType}
-        hasError={hasError}
+        $hasError={hasError}
         {...rest}
       />
       {isPasswordType && (

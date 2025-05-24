@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import  Piggy404  from "/img/piggy404.svg";
+import  Piggy404  from "/img/piggy404.webp";
 // import { Button } from "../components/atomic/Button";
 
 const NotFoundPage = styled.div`

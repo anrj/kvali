@@ -46,12 +46,11 @@ export default function Button({
   scrollsTo,
   ...rest
 }: ButtonProps) {
-
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     if (scrollsTo) {
       const element = document.getElementById(scrollsTo);
       if (element) {
-        element.scrollIntoView({ behavior: "smooth"});
+        element.scrollIntoView({ behavior: "smooth" });
       } else {
         console.warn(`Element with ID "${scrollsTo}" not found.`);
       }
@@ -64,8 +63,20 @@ export default function Button({
 
   let iconElement: ReactNode = null;
   if (icon) {
-    if (typeof icon === 'string') {
-      iconElement = <img src={icon} alt="" style={{ height: '1.5em', width: 'auto', display: 'block' }} />;
+    if (typeof icon === "string") {
+      iconElement = (
+        <img
+          src={icon}
+          alt=""
+          style={{
+            height: "1.5em",
+            width: "auto",
+            display: "block",
+          }}
+          loading="lazy"
+          decoding="async"
+        />
+      );
     } else {
       iconElement = icon;
     }

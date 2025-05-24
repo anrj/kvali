@@ -1,6 +1,6 @@
 import { styled, css } from "styled-components";
 import eatingImage from "../../assets/img/eating.jpg";
-// TO BE REUSED FOR SOMETHING ELSE  
+// TO BE REUSED FOR SOMETHING ELSE
 // use variables for colors
 const CTASection = styled.section`
   display: flex;
@@ -153,8 +153,8 @@ export function CTAComponent() {
               <InputLabel htmlFor="select-where">
                 Where did you hear from us?
               </InputLabel>
-              <SelectField required>
-                <option value="" disabled selected hidden>
+              <SelectField required defaultValue="">
+                <option value="" disabled hidden>
                   Please choose one option:
                 </option>
                 <option value="friend">Friends and family</option>
