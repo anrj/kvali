@@ -4,7 +4,7 @@ import styled from "styled-components";
 import KvaliLogoHand from "/logos/hand_logo_orange.svg";
 import Button from "../components/atomic/Button";
 import Input from "../components/atomic/Input";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 
 const SignInPageBackground = styled.div`
@@ -155,16 +155,20 @@ const ForgotPassword = styled(Link)`
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { user } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
+  const returnTo = searchParams.get("returnTo");
+
   useEffect(() => {
     if (user) {
-      navigate("/campaigns");
+      // Redirect to the return URL if it exists, otherwise go to campaigns
+      navigate(returnTo || "/campaigns");
     }
-  }, [user, navigate]);
+  }, [user, navigate, returnTo]);
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -207,7 +211,13 @@ export default function LoginPage() {
           <SignInMessage>ავტორიზაცია</SignInMessage>
           <span>
             არ გაქვთ ანგარიში?{" "}
-            <RouterLink to="/register">რეგისტრაცია</RouterLink>
+            <RouterLink
+              to={`/register${
+                returnTo ? `?returnTo=${encodeURIComponent(returnTo)}` : ""
+              }`}
+            >
+              რეგისტრაცია
+            </RouterLink>
           </span>
           <ButtonDiv>
             <Button icon={"/logos/facebook-svgrepo-com.svg"}>

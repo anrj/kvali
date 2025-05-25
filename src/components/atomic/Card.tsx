@@ -1,18 +1,17 @@
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 import { ProgressBar } from "./ProgressBar";
 
 const CardContainer = styled.div`
   background-color: #ffffff;
   box-sizing: border-box;
-
   padding: 0.875rem;
   padding-bottom: 1.25rem;
   border-radius: 5px;
-
   display: flex;
   flex-direction: column;
   gap: 0.875rem;
-
+  cursor: pointer;
   transition: all 0.2s ease-in-out;
 
   &:hover {
@@ -24,8 +23,7 @@ const CardContainer = styled.div`
   }
 `;
 
-const CardBody = styled.div`
-`;
+const CardBody = styled.div``;
 
 const ImageWrapper = styled.div`
   width: 100%;
@@ -74,6 +72,7 @@ const CardProgressBar = styled(ProgressBar)`
 `;
 
 interface CardProps {
+  id: number;
   imageSrc: string;
   title: string;
   barPercentage: number;
@@ -81,14 +80,21 @@ interface CardProps {
 }
 
 export function Card({
+  id,
   imageSrc,
   title,
   barPercentage,
   moneyRaised,
 }: CardProps) {
+  const navigate = useNavigate();
+
+  const handleCardClick = () => {
+    navigate(`/campaign/${id}`);
+  };
+
   return (
     <>
-      <CardContainer>
+      <CardContainer onClick={handleCardClick}>
         <ImageWrapper>
           <CardImage src={imageSrc}></CardImage>
         </ImageWrapper>

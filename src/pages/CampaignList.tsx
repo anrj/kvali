@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import supabase from "../utils/supabase.ts";
 import styled from "styled-components";
 import { Card } from "../components/atomic/Card";
@@ -77,26 +78,47 @@ interface Campaign {
 export default function CampaignList() {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const location = useLocation();
 
   useEffect(() => {
+    let cancelled = false;
+
     async function fetchCampaigns() {
       setIsLoading(true);
-      const { data, error } = await supabase
-        .from("campaigns")
-        .select("id, title, thumbnail_url, current_amount, goal_amount");
+      setCampaigns([]);
 
-      if (error) {
-        console.error("Error fetching campaigns:", error);
-      } else {
-        setCampaigns(data || []);
+      try {
+        const { data, error } = await supabase
+          .from("campaigns")
+          .select("id, title, thumbnail_url, current_amount, goal_amount");
+
+        if (!cancelled) {
+          if (error) {
+            console.error("Error fetching campaigns:", error);
+          } else {
+            setCampaigns(data || []);
+          }
+          setIsLoading(false);
+        } else {
+          console.log("Request was cancelled, not updating state");
+        }
+      } catch (err) {
+        if (!cancelled) {
+          console.error("Unexpected error:", err);
+          setIsLoading(false);
+        }
       }
-      setIsLoading(false);
     }
+
     fetchCampaigns();
-  }, []);
+
+    return () => {
+      cancelled = true;
+    };
+  }, [location.pathname]);
 
   const renderSkeletons = () => {
-    const skeletonCount = 5;
+    const skeletonCount = 8;
     return Array.from({ length: skeletonCount }).map((_, index) => (
       <SkeletonCard key={`skeleton-${index}`} />
     ));
@@ -118,6 +140,7 @@ export default function CampaignList() {
             ? renderSkeletons()
             : campaigns.map((campaign) => (
                 <Card
+                  id={campaign.id}
                   key={campaign.id}
                   title={campaign.title}
                   imageSrc={campaign.thumbnail_url}

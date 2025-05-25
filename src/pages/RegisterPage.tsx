@@ -5,7 +5,7 @@ import KvaliLogoHand from "/logos/hand_logo_orange.svg";
 import Button from "../components/atomic/Button";
 import Input from "../components/atomic/Input";
 import Checkbox from "../components/atomic/Checkbox";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 
 const SignInPageBackground = styled.div`
@@ -118,7 +118,10 @@ interface FormErrors {
 
 export default function RegisterPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { user } = useAuth();
+
+  const returnTo = searchParams.get("returnTo");
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -142,9 +145,10 @@ export default function RegisterPage() {
 
   useEffect(() => {
     if (user) {
-      navigate("/campaigns");
+      // Redirect to the return URL if it exists, otherwise go to campaigns
+      navigate(returnTo || "/campaigns");
     }
-  }, [user, navigate]);
+  }, [user, navigate, returnTo]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const { name, value, checked } = e.target;
@@ -274,8 +278,8 @@ export default function RegisterPage() {
     if (data) {
       console.log("User registered successfully:", data);
 
-      //TODO: navigate to where left off, campaign list for now
-      navigate("/campaigns");
+      // Navigate to the return URL if it exists, otherwise go to campaigns
+      navigate(returnTo || "/campaigns");
     }
   };
 
