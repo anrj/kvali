@@ -148,40 +148,79 @@ export default function Campaign() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    async function fetchCampaign() {
+    let isMounted = true;
+
+    async function fetchCampaignDetails() {
       if (!id) {
-        setError("Invalid campaign ID");
-        setLoading(false);
+        if (isMounted) {
+          setError("Invalid campaign ID");
+          setLoading(false);
+          setCampaign(null);
+        }
+        return;
+      }
+
+      if (isMounted) {
+        setLoading(true);
+        setCampaign(null);
+        setError(null);
+      } else {
         return;
       }
 
       try {
-        const { data, error } = await supabase
+        const { data, error: fetchError } = await supabase
           .from("campaigns")
           .select("*")
           .eq("id", id)
           .single();
 
-        if (error) {
-          if (error.code === "PGRST116") {
-            setError("Campaign not found");
+        if (!isMounted) return;
+
+        if (fetchError) {
+          if (fetchError.code === "PGRST116") {
+            setError("Campaign not found.");
           } else {
-            setError("Failed to load campaign");
+            setError(`Failed to load campaign: ${fetchError.message}`);
           }
-          console.error("Error fetching campaign:", error);
+          console.error("Error fetching campaign:", fetchError.message);
+        } else if (!data) {
+          setError("Campaign not found (no data returned).");
         } else {
           setCampaign(data);
         }
-      } catch (err) {
-        setError("An unexpected error occurred");
-        console.error("Error:", err);
+      } catch (err: unknown) {
+        if (!isMounted) return;
+        setError(
+          "An unexpected error occurred while fetching campaign details."
+        );
+        if (err instanceof Error) {
+          console.error(
+            "Unexpected error in fetchCampaignDetails:",
+            err.message
+          );
+        } else {
+          console.error("Unexpected error in fetchCampaignDetails:", err);
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     }
 
-    fetchCampaign();
+    fetchCampaignDetails();
+
+    return () => {
+      isMounted = false;
+    };
   }, [id]);
+
+  useEffect(() => {
+    if (error && !loading) {
+      navigate("/404", { replace: true });
+    }
+  }, [error, loading, navigate]);
 
   if (loading) {
     return (
@@ -191,13 +230,27 @@ export default function Campaign() {
     );
   }
 
-  if (error || !campaign) {
-    navigate("/404", { replace: true });
-    return null;
+  // After loading:
+  // If an error occurred, the navigation effect should handle it.
+  // If there's no campaign data (and not loading), it implies an issue.
+  if (!campaign) {
+    return (
+      <CampaignContainer>
+        <p>
+          {error
+            ? "Redirecting..."
+            : "Campaign data could not be loaded or the campaign was not found."}
+        </p>
+      </CampaignContainer>
+    );
   }
 
+  // If campaign is loaded successfully:
   const progressPercentage =
-    Math.round((campaign.current_amount / campaign.goal_amount) * 10000) / 100;
+    campaign.goal_amount > 0
+      ? Math.round((campaign.current_amount / campaign.goal_amount) * 10000) /
+        100
+      : 0;
 
   return (
     <CampaignContainer>
@@ -209,7 +262,7 @@ export default function Campaign() {
           </CampaignDescriptionHeader>
           <CampaignDescription>{campaign.description}</CampaignDescription>
           <OrginizedBy>
-            ორგანიზებულია: {campaign.created_at.split("T")[0]}
+            ორგანიზებულია: {new Date(campaign.created_at).toLocaleDateString()}
             <br />
             ორგანიზატორი: თენგიზ ბოკელავაძე {/* TODO: */}
           </OrginizedBy>

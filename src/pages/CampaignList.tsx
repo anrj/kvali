@@ -81,30 +81,36 @@ export default function CampaignList() {
   const location = useLocation();
 
   useEffect(() => {
-    let cancelled = false;
+    let isMounted = true;
 
     async function fetchCampaigns() {
+      if (!isMounted) {
+        return;
+      }
+
       setIsLoading(true);
-      setCampaigns([]);
 
       try {
         const { data, error } = await supabase
           .from("campaigns")
           .select("id, title, thumbnail_url, current_amount, goal_amount");
 
-        if (!cancelled) {
+        if (isMounted) {
           if (error) {
-            console.error("Error fetching campaigns:", error);
+            console.error("Error fetching campaigns:", error.message);
+            setCampaigns([]);
           } else {
             setCampaigns(data || []);
           }
           setIsLoading(false);
-        } else {
-          console.log("Request was cancelled, not updating state");
         }
-      } catch (err) {
-        if (!cancelled) {
-          console.error("Unexpected error:", err);
+      } catch (err: unknown) {
+        if (isMounted) {
+          console.error(
+            "Unexpected error fetching campaigns:",
+            err instanceof Error ? err.message : String(err)
+          );
+          setCampaigns([]);
           setIsLoading(false);
         }
       }
@@ -113,7 +119,7 @@ export default function CampaignList() {
     fetchCampaigns();
 
     return () => {
-      cancelled = true;
+      isMounted = false;
     };
   }, [location.pathname]);
 

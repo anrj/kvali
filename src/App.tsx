@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import MainLayout from "./layouts/MainLayout";
 import MinimalLayout from "./layouts/MinimalLayout";
-import { ProtectedRoute } from "./utils/ProtectedRoute";
+// import { ProtectedRoute } from "./utils/ProtectedRoute";
 
 import HomePage from "./pages/HomePage";
 import CampaignList from "./pages/CampaignList";
@@ -18,14 +18,7 @@ export default function App() {
           <Route element={<MainLayout />}>
             <Route path="/" element={<HomePage />} />
             <Route path="/campaigns" element={<CampaignList />} />
-            <Route
-              path="/campaign/:id"
-              element={
-                <ProtectedRoute>
-                  <Campaign />
-                </ProtectedRoute>
-              }
-            />
+            <Route path="/campaign/:id" element={<Campaign />} />
             <Route path="/404" element={<NotFound />} />
             <Route path="*" element={<NotFound />} />
           </Route>
