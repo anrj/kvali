@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 import supabase from "../utils/supabase.ts";
 import styled from "styled-components";
 import { Card } from "../components/atomic/Card";
@@ -41,17 +41,23 @@ const TabGroup = styled.div`
   gap: 0.3rem;
 `;
 
-const TabButton = styled(Button)`
+const TabButton = styled(Button)<{ isActive?: boolean }>`
   padding: 0.5rem 1rem;
   border-radius: 18px;
   font-size: 0.65rem;
   transition: all 0.2s ease-in-out;
 
+  background-color: ${(props) => (props.isActive ? "#f3bf92" : "#5c320e")};
+  color: ${(props) => (props.isActive ? "#555555" : "#ffffff")};
+
   &:hover {
-    background-color: #5c320e;
+    background-color: ${(props) =>
+      props.isActive
+        ? "#e0ac82"
+        : "#7a4a2a"};
+    color: ${(props) => (props.isActive ? "#555555" : "#ffffff")};
   }
 
-  &:focus,
   &:active {
     background-color: #f3bf92;
     color: #555555;
@@ -73,12 +79,34 @@ interface Campaign {
   current_amount: number;
   goal_amount: number;
   thumbnail_url: string;
+  type: number;
 }
 
 export default function CampaignList() {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const [activeFilterType, setActiveFilterType] = useState<number | null>(
+    () => {
+      const typeFromUrl = searchParams.get("type");
+      return typeFromUrl && !isNaN(parseInt(typeFromUrl))
+        ? parseInt(typeFromUrl)
+        : null;
+    }
+  );
+
+  useEffect(() => {
+    const typeFromUrl = searchParams.get("type");
+    const newActiveFilterType =
+      typeFromUrl && !isNaN(parseInt(typeFromUrl))
+        ? parseInt(typeFromUrl)
+        : null;
+    if (newActiveFilterType !== activeFilterType) {
+      setActiveFilterType(newActiveFilterType);
+    }
+  }, [searchParams, activeFilterType]);
 
   useEffect(() => {
     let isMounted = true;
@@ -87,13 +115,20 @@ export default function CampaignList() {
       if (!isMounted) {
         return;
       }
-
       setIsLoading(true);
 
       try {
-        const { data, error } = await supabase
+        let query = supabase
           .from("campaigns")
-          .select("id, title, thumbnail_url, current_amount, goal_amount");
+          .select(
+            "id, title, thumbnail_url, current_amount, goal_amount, type"
+          );
+
+        if (activeFilterType !== null) {
+          query = query.eq("type", activeFilterType);
+        }
+
+        const { data, error } = await query;
 
         if (isMounted) {
           if (error) {
@@ -121,7 +156,26 @@ export default function CampaignList() {
     return () => {
       isMounted = false;
     };
-  }, [location.pathname]);
+  }, [location.pathname, activeFilterType]);
+
+  const handleFilterChange = (typeValue: number) => {
+    const currentTypeParam = searchParams.get("type");
+    const currentActiveTypeInUrl = currentTypeParam
+      ? parseInt(currentTypeParam)
+      : null;
+
+    if (currentActiveTypeInUrl === typeValue) {
+      setSearchParams(
+        (prev) => {
+          prev.delete("type");
+          return prev;
+        },
+        { replace: true }
+      );
+    } else {
+      setSearchParams({ type: String(typeValue) }, { replace: true });
+    }
+  };
 
   const renderSkeletons = () => {
     const skeletonCount = 8;
@@ -136,9 +190,24 @@ export default function CampaignList() {
         <FilterRow>
           <FilterButton icon={<RiListSettingsLine size={16} />}></FilterButton>
           <TabGroup>
-            <TabButton>ქველმოქმედება</TabButton>
-            <TabButton>ბიზნესი</TabButton>
-            <TabButton>სხვა</TabButton>
+            <TabButton
+              onClick={() => handleFilterChange(1)}
+              isActive={activeFilterType === 1}
+            >
+              ქველმოქმედება
+            </TabButton>
+            <TabButton
+              onClick={() => handleFilterChange(2)}
+              isActive={activeFilterType === 2}
+            >
+              ბიზნესი
+            </TabButton>
+            <TabButton
+              onClick={() => handleFilterChange(3)}
+              isActive={activeFilterType === 3}
+            >
+              სხვა
+            </TabButton>
           </TabGroup>
         </FilterRow>
         <CampaignListContainer>
@@ -152,9 +221,12 @@ export default function CampaignList() {
                   imageSrc={campaign.thumbnail_url}
                   moneyRaised={campaign.current_amount}
                   barPercentage={
-                    Math.round(
-                      (campaign.current_amount / campaign.goal_amount) * 10000
-                    ) / 100
+                    campaign.goal_amount > 0
+                      ? Math.round(
+                          (campaign.current_amount / campaign.goal_amount) *
+                            10000
+                        ) / 100
+                      : 0
                   }
                 />
               ))}

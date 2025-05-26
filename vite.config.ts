@@ -7,7 +7,7 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        // ensure assets are hashed for cache busting (image optimization)
+        // ensure assets are hashed for cache busting
         assetFileNames: (assetInfo) => {
           const info = assetInfo.name!.split(".");
           const ext = info[info.length - 1];
@@ -18,6 +18,6 @@ export default defineConfig({
         },
       },
     },
-    assetsInlineLimit: 4096, // Inline assets smaller than 4kb
+    assetsInlineLimit: 4096, // inline assets smaller than 4kb
   },
 });
