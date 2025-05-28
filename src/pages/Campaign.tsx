@@ -51,11 +51,11 @@ const CampaignInfo = styled.div`
 `;
 
 const CampaignTitle = styled.h1`
-  font-size: 2.4rem;
+  font-size: 2rem;
   font-weight: 600;
   color: #140e0e;
   margin: 0;
-  line-height: 1.2;
+  line-height: 1.3;
 `;
 
 const OrginizedBy = styled.span`
@@ -136,8 +136,11 @@ interface Campaign {
   goal_amount: number;
   thumbnail_url: string;
   created_at: string;
-  // TODO: add trigger to db when campaign is created use profiles id as fk in campaigns table
-  // organizer_id: string;
+  organizer_id: string;
+  organizer?: {
+    first_name: string;
+    last_name: string;
+  };
 }
 
 export default function Campaign() {
@@ -147,35 +150,32 @@ export default function Campaign() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Fetch campaign details from Supabase
   useEffect(() => {
-    let isMounted = true;
-
     async function fetchCampaignDetails() {
       if (!id) {
-        if (isMounted) {
-          setError("Invalid campaign ID");
-          setLoading(false);
-          setCampaign(null);
-        }
+        setError("Invalid campaign ID");
+        setLoading(false);
         return;
       }
 
-      if (isMounted) {
-        setLoading(true);
-        setCampaign(null);
-        setError(null);
-      } else {
-        return;
-      }
+      setLoading(true);
+      setError(null);
 
       try {
         const { data, error: fetchError } = await supabase
           .from("campaigns")
-          .select("*")
+          .select(
+            `
+            *,
+            organizer:profiles!campaigns_organizer_id_fkey(
+              first_name,
+              last_name
+            )
+          `
+          )
           .eq("id", id)
           .single();
-
-        if (!isMounted) return;
 
         if (fetchError) {
           if (fetchError.code === "PGRST116") {
@@ -190,30 +190,16 @@ export default function Campaign() {
           setCampaign(data);
         }
       } catch (err: unknown) {
-        if (!isMounted) return;
         setError(
           "An unexpected error occurred while fetching campaign details."
         );
-        if (err instanceof Error) {
-          console.error(
-            "Unexpected error in fetchCampaignDetails:",
-            err.message
-          );
-        } else {
-          console.error("Unexpected error in fetchCampaignDetails:", err);
-        }
+        console.error("Unexpected error in fetchCampaignDetails:", err);
       } finally {
-        if (isMounted) {
-          setLoading(false);
-        }
+        setLoading(false);
       }
     }
 
     fetchCampaignDetails();
-
-    return () => {
-      isMounted = false;
-    };
   }, [id]);
 
   useEffect(() => {
@@ -264,7 +250,10 @@ export default function Campaign() {
           <OrginizedBy>
             ორგანიზებულია: {new Date(campaign.created_at).toLocaleDateString()}
             <br />
-            ორგანიზატორი: თენგიზ ბოკელავაძე {/* TODO: */}
+            ორგანიზატორი:{" "}
+            {campaign.organizer
+              ? `${campaign.organizer.first_name} ${campaign.organizer.last_name}`
+              : "უცნობი"}
           </OrginizedBy>
         </CampaignContent>
         <CampaignInfo>

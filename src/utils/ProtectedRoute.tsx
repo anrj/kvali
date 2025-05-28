@@ -1,4 +1,4 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import LoadingSpinner from "../components/atomic/LoadingSpinner";
 
@@ -8,15 +8,22 @@ interface ProtectedRouteProps {
 
 export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const { user, loading } = useAuth();
+  const location = useLocation();
 
-  if (loading) {
-    return (
-       <LoadingSpinner centered minHeight="100vh" />
-    );
+  // Only show loading on initial page load, not on auth state changes
+  if (loading && user === null) {
+    return <LoadingSpinner centered minHeight="100vh" />;
   }
 
-  if (!user) {
-    return <Navigate to="/login" replace />;
+  if (!user && !loading) {
+    return (
+      <Navigate
+        to={`/login?returnTo=${encodeURIComponent(
+          location.pathname + location.search
+        )}`}
+        replace
+      />
+    );
   }
 
   return <>{children}</>;

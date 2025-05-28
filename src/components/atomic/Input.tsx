@@ -1,5 +1,5 @@
-import { useState, InputHTMLAttributes } from 'react';
-import styled, { css } from 'styled-components';
+import { useState, InputHTMLAttributes } from "react";
+import styled, { css } from "styled-components";
 import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 
 const InputCSS = css`
@@ -21,8 +21,8 @@ const InputCSS = css`
 const ErrorMessage = styled.span`
   padding: 0;
   font-size: 12px;
-  font-weight: 500;
-  color: #CC777B;
+  font-weight: 300;
+  color: #cc777b;
   /* visibility: hidden; */
 `;
 
@@ -39,7 +39,6 @@ const InputWrapper = styled.div`
   width: 100%;
 `;
 
-
 const StyledInput = styled.input<{ $hasError?: boolean }>`
   ${InputCSS}
 
@@ -47,10 +46,22 @@ const StyledInput = styled.input<{ $hasError?: boolean }>`
     color: #140e0e90;
     font-size: 0.8rem;
   }
-  
+
+  /* Remove spinner arrows from number inputs */
+  &[type="number"]::-webkit-outer-spin-button,
+  &[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  &[type="number"] {
+    -moz-appearance: textfield;
+  }
+
   &:hover {
     transition: border 0.2s ease;
-    border: ${props => props.$hasError ? '1px solid #e8aea8' : '1px solid #bbbbbb'};
+    border: ${(props) =>
+      props.$hasError ? "1px solid #e8aea8" : "1px solid #bbbbbb"};
   }
 
   &:focus {
@@ -60,10 +71,12 @@ const StyledInput = styled.input<{ $hasError?: boolean }>`
     transition: box-shadow 0.2s ease-in, border-color 0.2s ease-in;
   }
 
-  ${props => props.$hasError && css`
-    border-color: #e8aea8;
-    box-shadow: inset 0 0 0 2px #e8aaa46f;
-  `}
+  ${(props) =>
+    props.$hasError &&
+    css`
+      border-color: #e8aea8;
+      box-shadow: inset 0 0 0 2px #e8aaa46f;
+    `}
 `;
 
 const PasswordToggleIcon = styled.button`
@@ -86,7 +99,6 @@ const PasswordToggleIcon = styled.button`
   }
 `;
 
-
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   hasError?: boolean;
@@ -95,34 +107,42 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   className?: string;
 }
 
-
-
-export default function Input({ className, type, hasError, errorMessage, ...rest }: InputProps) {
+export default function Input({
+  className,
+  type,
+  hasError,
+  errorMessage,
+  ...rest
+}: InputProps) {
   const [showPassword, setShowPassword] = useState(false);
 
   const togglePasswordVisibility = () => {
-    setShowPassword(prev => !prev);
+    setShowPassword((prev) => !prev);
   };
 
-  const inputType = type === 'password' && showPassword ? 'text' : type;
-  const isPasswordType = type === 'password';
+  const inputType = type === "password" && showPassword ? "text" : type;
+  const isPasswordType = type === "password";
 
   return (
-  <>
-  <Flexcolumn>
-    <InputWrapper className={className}>
-      <StyledInput
-        type={inputType}
-        $hasError={hasError}
-        {...rest}
-      />
-      {isPasswordType && (
-        <PasswordToggleIcon type="button" onClick={togglePasswordVisibility}>
-          {showPassword ? <IoEyeOffOutline size={20} /> : <IoEyeOutline size={20} />}
-        </PasswordToggleIcon>
-      )}
-    </InputWrapper>
-    <ErrorMessage>{errorMessage}</ErrorMessage>
-  </Flexcolumn>
-  </>);
+    <>
+      <Flexcolumn>
+        <InputWrapper className={className}>
+          <StyledInput type={inputType} $hasError={hasError} {...rest} />
+          {isPasswordType && (
+            <PasswordToggleIcon
+              type="button"
+              onClick={togglePasswordVisibility}
+            >
+              {showPassword ? (
+                <IoEyeOffOutline size={20} />
+              ) : (
+                <IoEyeOutline size={20} />
+              )}
+            </PasswordToggleIcon>
+          )}
+        </InputWrapper>
+        <ErrorMessage>{errorMessage}</ErrorMessage>
+      </Flexcolumn>
+    </>
+  );
 }

@@ -31,7 +31,7 @@ const HeaderContainer = styled.header<{
       background-color: ${props.$isTransparentPage
         ? "rgba(255, 255, 255, 0.95)"
         : "white"};
-      backdrop-filter: ${props.$isTransparentPage ? "blur(10px)" : "none"};    
+      backdrop-filter: ${props.$isTransparentPage ? "blur(10px)" : "none"};
       box-shadow: 0 1.2rem 3.2rem rgba(0, 0, 0, 0.05);
       z-index: 1000;
 
@@ -177,6 +177,15 @@ export function Header() {
       navigate("/login");
     }
   };
+
+  const handleCampaignButtonClick = () => {
+    if (user) {
+      navigate("/create-campaign");
+    } else {
+      navigate(`/login?returnTo=${encodeURIComponent("/create-campaign")}`);
+    }
+  };
+
   const getUsername = () => {
     if (profile?.first_name) {
       return profile.first_name;
@@ -206,6 +215,7 @@ export function Header() {
           <ButtonsContainer>
             <Button
               className="header-campaign-btn"
+              onClick={handleCampaignButtonClick}
               icon={<BsPiggyBank size={18} />}
             >
               კამპანიის დაწყება

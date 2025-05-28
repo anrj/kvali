@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useLocation, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import supabase from "../utils/supabase.ts";
 import styled from "styled-components";
 import { Card } from "../components/atomic/Card";
@@ -41,21 +41,18 @@ const TabGroup = styled.div`
   gap: 0.3rem;
 `;
 
-const TabButton = styled(Button)<{ isActive?: boolean }>`
+const TabButton = styled(Button)<{ $isActive?: boolean }>`
   padding: 0.5rem 1rem;
   border-radius: 18px;
   font-size: 0.65rem;
   transition: all 0.2s ease-in-out;
 
-  background-color: ${(props) => (props.isActive ? "#f3bf92" : "#5c320e")};
-  color: ${(props) => (props.isActive ? "#555555" : "#ffffff")};
+  background-color: ${(props) => (props.$isActive ? "#f3bf92" : "#5c320e")};
+  color: ${(props) => (props.$isActive ? "#555555" : "#ffffff")};
 
   &:hover {
-    background-color: ${(props) =>
-      props.isActive
-        ? "#e0ac82"
-        : "#7a4a2a"};
-    color: ${(props) => (props.isActive ? "#555555" : "#ffffff")};
+    background-color: ${(props) => (props.$isActive ? "#e0ac82" : "#7a4a2a")};
+    color: ${(props) => (props.$isActive ? "#555555" : "#ffffff")};
   }
 
   &:active {
@@ -85,36 +82,15 @@ interface Campaign {
 export default function CampaignList() {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const [activeFilterType, setActiveFilterType] = useState<number | null>(
-    () => {
-      const typeFromUrl = searchParams.get("type");
-      return typeFromUrl && !isNaN(parseInt(typeFromUrl))
-        ? parseInt(typeFromUrl)
-        : null;
-    }
-  );
+  const typeParam = searchParams.get("type");
+  const activeFilterType =
+    typeParam && !isNaN(parseInt(typeParam)) ? parseInt(typeParam) : null;
 
+  // Fetch campaigns from Supabase
   useEffect(() => {
-    const typeFromUrl = searchParams.get("type");
-    const newActiveFilterType =
-      typeFromUrl && !isNaN(parseInt(typeFromUrl))
-        ? parseInt(typeFromUrl)
-        : null;
-    if (newActiveFilterType !== activeFilterType) {
-      setActiveFilterType(newActiveFilterType);
-    }
-  }, [searchParams, activeFilterType]);
-
-  useEffect(() => {
-    let isMounted = true;
-
     async function fetchCampaigns() {
-      if (!isMounted) {
-        return;
-      }
       setIsLoading(true);
 
       try {
@@ -130,41 +106,25 @@ export default function CampaignList() {
 
         const { data, error } = await query;
 
-        if (isMounted) {
-          if (error) {
-            console.error("Error fetching campaigns:", error.message);
-            setCampaigns([]);
-          } else {
-            setCampaigns(data || []);
-          }
-          setIsLoading(false);
+        if (error) {
+          console.error("Error fetching campaigns:", error.message);
+          setCampaigns([]);
+        } else {
+          setCampaigns(data || []);
         }
       } catch (err: unknown) {
-        if (isMounted) {
-          console.error(
-            "Unexpected error fetching campaigns:",
-            err instanceof Error ? err.message : String(err)
-          );
-          setCampaigns([]);
-          setIsLoading(false);
-        }
+        console.error("Unexpected error fetching campaigns:", err);
+        setCampaigns([]);
+      } finally {
+        setIsLoading(false);
       }
     }
 
     fetchCampaigns();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [location.pathname, activeFilterType]);
+  }, [activeFilterType]);
 
   const handleFilterChange = (typeValue: number) => {
-    const currentTypeParam = searchParams.get("type");
-    const currentActiveTypeInUrl = currentTypeParam
-      ? parseInt(currentTypeParam)
-      : null;
-
-    if (currentActiveTypeInUrl === typeValue) {
+    if (activeFilterType === typeValue) {
       setSearchParams(
         (prev) => {
           prev.delete("type");
@@ -192,19 +152,19 @@ export default function CampaignList() {
           <TabGroup>
             <TabButton
               onClick={() => handleFilterChange(1)}
-              isActive={activeFilterType === 1}
+              $isActive={activeFilterType === 1}
             >
               ქველმოქმედება
             </TabButton>
             <TabButton
               onClick={() => handleFilterChange(2)}
-              isActive={activeFilterType === 2}
+              $isActive={activeFilterType === 2}
             >
               ბიზნესი
             </TabButton>
             <TabButton
               onClick={() => handleFilterChange(3)}
-              isActive={activeFilterType === 3}
+              $isActive={activeFilterType === 3}
             >
               სხვა
             </TabButton>
