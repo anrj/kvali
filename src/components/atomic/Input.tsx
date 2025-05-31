@@ -55,6 +55,7 @@ const StyledInput = styled.input<{ $hasError?: boolean }>`
   }
 
   &[type="number"] {
+    appearance: textfield;
     -moz-appearance: textfield;
   }
 

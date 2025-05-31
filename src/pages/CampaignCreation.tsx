@@ -90,6 +90,10 @@ const TextArea = styled.textarea<{ $hasError?: boolean }>`
     outline: none;
     box-shadow: 0 0 0 2px rgba(229, 126, 34, 0.2);
   }
+
+  &::placeholder {
+    font-family: "TBCX", sans-serif;
+  }
 `;
 
 const ThumbnailContainer = styled.div<{ $hasError?: boolean }>`
@@ -192,6 +196,7 @@ const Select = styled.select<{ $hasError?: boolean }>`
   border: 1px solid ${(props) => (props.$hasError ? "#e8aea8" : "#ccc")};
   border-radius: 8px;
   font-size: 1rem;
+  font-family: "TBCX", sans-serif;
   background-color: #fdf2e9;
   color: #45260a;
   box-shadow: ${(props) =>
