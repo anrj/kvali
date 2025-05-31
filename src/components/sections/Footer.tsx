@@ -132,8 +132,8 @@ export function Footer() {
       <NavCol>
         <FooterHeading>პლატფორმა</FooterHeading>
         <NavColList>
-          <FooterLink>რეგისტრაცია</FooterLink>
-          <FooterLink>კამპანიის დაწყება</FooterLink>
+          <FooterLink to="/register">რეგისტრაცია</FooterLink>
+          <FooterLink to="/create-campaign">კამპანიის დაწყება</FooterLink>
           <FooterLink to="/campaigns">კამპანიების ნახვა</FooterLink>
           <FooterLink to="/404">Android აპლიკაცია</FooterLink>
         </NavColList>
@@ -141,18 +141,18 @@ export function Footer() {
       <NavCol>
         <FooterHeading>ჩვენს შესახებ</FooterHeading>
         <NavColList>
-          <FooterLink>მომსახურების პირობები</FooterLink>
-          <FooterLink>ბლოგი / სიახლეები</FooterLink>
-          <FooterLink>პარტნიორები</FooterLink>
-          <FooterLink>კონფიდენციალურობის <br/>პოლიტიკა</FooterLink>
+          <FooterLink to="/404">მომსახურების პირობები</FooterLink>
+          <FooterLink to="/404">ბლოგი / სიახლეები</FooterLink>
+          <FooterLink to="/404">პარტნიორები</FooterLink>
+          <FooterLink to="/404">კონფიდენციალურობის <br/>პოლიტიკა</FooterLink>
         </NavColList>
       </NavCol>
       <NavCol>
         <FooterHeading>დახმარება</FooterHeading>
         <NavColList>
-          <FooterLink>ხშირად დასმული კითხვები</FooterLink>
-          <FooterLink>წერილის მიწერა</FooterLink>
-          <FooterLink>ანონიმური უკუკავშირი</FooterLink>
+          <FooterLink to="/404">ხშირად დასმული კითხვები</FooterLink>
+          <FooterLink to="/404">წერილის მიწერა</FooterLink>
+          <FooterLink to="/404">ანონიმური უკუკავშირი</FooterLink>
         </NavColList>
       </NavCol>
     </FooterContainer>
