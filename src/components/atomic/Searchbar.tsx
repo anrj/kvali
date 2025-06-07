@@ -39,6 +39,20 @@ const SearchBar = styled.input`
   font-size: 0.875rem;
   font-family: "TBCX", sans-serif;
 
+  /* Remove default Safari search styling */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  /* Hide Safari's search icons */
+  &::-webkit-search-decoration,
+  &::-webkit-search-cancel-button,
+  &::-webkit-search-results-button,
+  &::-webkit-search-results-decoration {
+    -webkit-appearance: none;
+    display: none;
+  }
+
   &:hover {
     border-color: rgb(147 149 155);
   }
