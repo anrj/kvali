@@ -5,30 +5,21 @@ import { useNavigate } from "react-router-dom";
 
 const HeroSection = styled.section`
   padding: 48px 0 96px 0;
-  height: calc(
-    100vh - 80px - 48px - 96px
-  ); // entire viewport height minus header and padding
   background-color: #fdf2e9;
   border-top: 1px dotted #45260a60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
 
   @media (max-width: 768px) {
-    flex-flow: wrap-reverse;
-
-    #hero-img {
-      width: 75%;
-    }
+    padding: 24px 0 48px 0;
   }
 
-  /* @media (max-width: 1920px) {
-    #hero-body {
-      width: 50%;
-      font-size: 1.2rem;
-    }
-    #hero-img {
-      width: 950px;
-      height: auto;
-    }
-  } */
+  @media (max-width: 768px) and (orientation: landscape) {
+    min-height: auto;
+    padding: 24px 0;
+  }
 `;
 
 const HeroDiv = styled.div`
@@ -36,25 +27,81 @@ const HeroDiv = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+
+  @media (max-width: 768px) {
+    flex-direction: column-reverse;
+    text-align: center;
+    gap: 2rem;
+    padding: 0 1rem;
+  }
+
+  @media (max-width: 768px) and (orientation: landscape) {
+    flex-direction: row;
+    gap: 1.5rem;
+    align-items: center;
+    padding: 0 1rem;
+  }
 `;
 
 const HeroBody = styled.div`
-  padding: 0 0.25rem 0 4.2rem;
+  padding: 0;
+  margin-right: 3rem;
   font-size: 1rem;
-  max-width: 730px;
+  max-width: 550px;
   color: #140e0e;
+  flex: 1 1 45%;
+  min-width: 0;
+
+  @media (max-width: 768px) {
+    margin-right: 0;
+    padding: 0 1rem;
+    max-width: 100%;
+    text-align: center;
+  }
+
+  @media (max-width: 768px) and (orientation: landscape) {
+    padding: 0 1rem 0 0;
+    text-align: left;
+    max-width: 50%;
+    margin-right: 1.5rem;
+  }
 
   h1 {
     font-family: "Noto Serif Georgian", "TBCX", sans-serif;
     font-size: 3.2rem;
     margin: 0 0 1.6rem 0;
     line-height: 1.1;
+
+    @media (max-width: 768px) {
+      font-size: 1.9rem !important;
+      text-align: justify;
+    }
+    @media (max-width: 480px) {
+      font-size: 2rem;
+    }
+    @media (max-width: 768px) and (orientation: landscape) {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+    }
   }
 
   p {
     font-size: 1.085rem;
     line-height: 1.6;
     max-width: 600px;
+    @media (max-width: 768px) {
+      font-size: 0.9rem;
+      max-width: 100%;
+      text-align: start;
+    }
+    @media (max-width: 768px) and (orientation: landscape) {
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
   }
 
   .hero-btns {
@@ -63,6 +110,17 @@ const HeroBody = styled.div`
     align-items: center;
     margin-top: 1.75rem;
     gap: 0.75rem;
+
+    @media (max-width: 768px) {
+      justify-content: center;
+      gap: 1rem;
+    }
+    @media (max-width: 768px) and (orientation: landscape) {
+      flex-direction: row;
+      justify-content: flex-start;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
   }
 
   .hero-learnmore-btn {
@@ -112,9 +170,35 @@ const HeroBody = styled.div`
 `;
 
 const HeroImage = styled.img`
-  margin-right: 2rem;
-  width: 800px;
-  height: 450px;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  object-fit: contain;
+  flex: 1 1 55%;
+  min-width: 0;
+
+  @media (max-width: 960px) {
+  }
+
+  @media (max-width: 768px) {
+    width: 80%;
+    height: auto;
+    margin-right: 0;
+    max-width: 400px;
+  }
+
+  @media (max-width: 480px) {
+    width: 90%;
+    max-width: 350px;
+  }
+
+  @media (max-width: 768px) and (orientation: landscape) {
+    width: auto;
+    height: clamp(150px, 40vh, 250px);
+    max-width: 45%;
+    margin-right: 0;
+    margin-bottom: 0;
+  }
 `;
 
 export function Hero() {
@@ -131,7 +215,6 @@ export function Hero() {
             მარტივად.
           </p>
           <div className="hero-btns">
-            {/* TODO: Use Link to navigate instead, reference semantic ui button props */}
             <Button
               onClick={() => navigate("/campaigns")}
               className="hero-viewall-btn"

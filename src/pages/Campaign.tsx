@@ -10,14 +10,37 @@ const CampaignContainer = styled.div`
   min-height: 100vh;
   padding: 2rem 4rem;
   border-top: 1px dotted #45260a60;
-`;
-
-const CampaignHeader = styled.div`
-  display: flex;
-  gap: 2rem;
-  margin-bottom: 2rem;
 
   @media (max-width: 768px) {
+    padding: 1rem 2rem;
+  }
+`;
+
+const MobileTopSection = styled.div`
+  display: none;
+
+  @media (max-width: 768px) {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+`;
+
+const DesktopLayout = styled.div`
+  display: flex;
+  gap: 2rem;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+`;
+
+const MobileDescriptionSection = styled.div`
+  display: none;
+
+  @media (max-width: 768px) {
+    display: flex;
     flex-direction: column;
   }
 `;
@@ -47,6 +70,8 @@ const CampaignInfo = styled.div`
 
   @media (max-width: 768px) {
     min-width: auto;
+    gap: 0.75rem;
+    padding: 1rem;
   }
 `;
 
@@ -56,6 +81,10 @@ const CampaignTitle = styled.h1`
   color: #140e0e;
   margin: 0;
   line-height: 1.3;
+
+  @media (max-width: 768px) {
+    font-size: 1.4rem;
+  }
 `;
 
 const OrginizedBy = styled.span`
@@ -70,6 +99,10 @@ const CampaignContent = styled.div`
   flex-direction: column;
   flex: 1;
   max-width: 800px;
+
+  @media (max-width: 768px) {
+    max-width: 100%;
+  }
 `;
 
 const CampaignDescriptionHeader = styled.span`
@@ -91,6 +124,11 @@ const CampaignStats = styled.div`
   flex-direction: column;
   gap: 0.5rem;
   margin: 1.5rem 0;
+
+  @media (max-width: 768px) {
+    gap: 0.3rem;
+    margin: 1rem 0;
+  }
 `;
 
 const StatRow = styled.div`
@@ -102,18 +140,30 @@ const StatRow = styled.div`
 const StatLabel = styled.span`
   font-size: 1rem;
   color: #666;
+
+  @media (max-width: 768px) {
+    font-size: 0.9rem;
+  }
 `;
 
 const StatValue = styled.span`
   font-size: 1.2rem;
   font-weight: 600;
   color: #140e0e;
+
+  @media (max-width: 768px) {
+    font-size: 1rem;
+  }
 `;
 
 const MoneyAmount = styled.span`
   font-size: 2rem;
   font-weight: 700;
   color: #e57e22;
+
+  @media (max-width: 768px) {
+    font-size: 1.6rem;
+  }
 `;
 
 const DonateButton = styled(Button)`
@@ -125,6 +175,12 @@ const DonateButton = styled(Button)`
 
   &:hover {
     background-color: #cf711f;
+  }
+
+  @media (max-width: 768px) {
+    margin-top: 0.75rem;
+    padding: 0.875rem 1.5rem;
+    font-size: 1rem;
   }
 `;
 
@@ -240,7 +296,47 @@ export default function Campaign() {
 
   return (
     <CampaignContainer>
-      <CampaignHeader>
+      {/* Mobile Layout - Image and Stats First */}
+      <MobileTopSection>
+        <CampaignImage src={campaign.thumbnail_url} alt={campaign.title} />
+        <CampaignInfo>
+          <CampaignTitle>{campaign.title}</CampaignTitle>
+          <CampaignStats>
+            <MoneyAmount>
+              ₾{campaign.current_amount.toLocaleString()}
+            </MoneyAmount>
+            <ProgressBar percentage={progressPercentage} />
+            <StatRow>
+              <StatLabel>შეგროვდა:</StatLabel>
+              <StatValue>{progressPercentage}%</StatValue>
+            </StatRow>
+            <StatRow>
+              <StatLabel>მიზანი:</StatLabel>
+              <StatValue>₾{campaign.goal_amount.toLocaleString()}</StatValue>
+            </StatRow>
+          </CampaignStats>
+          <DonateButton>ფულის შეწირვა</DonateButton>
+        </CampaignInfo>
+      </MobileTopSection>
+
+      {/* Mobile Layout - Description Section */}
+      <MobileDescriptionSection>
+        <CampaignDescriptionHeader>
+          კამპანიის შესახებ:
+        </CampaignDescriptionHeader>
+        <CampaignDescription>{campaign.description}</CampaignDescription>
+        <OrginizedBy>
+          ორგანიზებულია: {new Date(campaign.created_at).toLocaleDateString()}
+          <br />
+          ორგანიზატორი:{" "}
+          {campaign.organizer
+            ? `${campaign.organizer.first_name} ${campaign.organizer.last_name}`
+            : "უცნობი"}
+        </OrginizedBy>
+      </MobileDescriptionSection>
+
+      {/* Desktop Layout - Original Structure */}
+      <DesktopLayout>
         <CampaignContent>
           <CampaignImage src={campaign.thumbnail_url} alt={campaign.title} />
           <CampaignDescriptionHeader>
@@ -258,13 +354,11 @@ export default function Campaign() {
         </CampaignContent>
         <CampaignInfo>
           <CampaignTitle>{campaign.title}</CampaignTitle>
-
           <CampaignStats>
             <MoneyAmount>
               ₾{campaign.current_amount.toLocaleString()}
             </MoneyAmount>
             <ProgressBar percentage={progressPercentage} />
-
             <StatRow>
               <StatLabel>შეგროვდა:</StatLabel>
               <StatValue>{progressPercentage}%</StatValue>
@@ -274,10 +368,9 @@ export default function Campaign() {
               <StatValue>₾{campaign.goal_amount.toLocaleString()}</StatValue>
             </StatRow>
           </CampaignStats>
-
           <DonateButton>ფულის შეწირვა</DonateButton>
         </CampaignInfo>
-      </CampaignHeader>
+      </DesktopLayout>
     </CampaignContainer>
   );
 }

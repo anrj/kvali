@@ -51,7 +51,7 @@ const HeaderContainer = styled.header<{
   ${(props) =>
     props.$isTransparentPage &&
     css`
-      background-color: transparent;
+      background-color: #ffffffbb;
 
       ${HeaderSearchbar} input {
         background-color: transparent;
@@ -65,13 +65,15 @@ const HeaderContainer = styled.header<{
         }
       }
     `}
+
+  @media (max-width: 768px) {
+    padding: 16px 0px;
+  }
 `;
 
-const HeaderSpacing = styled.div<{ $isFixed?: boolean }>`
-  position: static;
+const HeaderSpacing = styled.div<{ $actualHeaderHeight: number }>`
   width: 100%;
-  height: 96px;
-  display: ${(props) => (props.$isFixed ? "block" : "none")};
+  height: ${(props) => props.$actualHeaderHeight}px;
 `;
 
 const HeaderNav = styled.nav`
@@ -82,17 +84,65 @@ const HeaderNav = styled.nav`
   height: 48px;
   gap: 2rem;
 
-  @media (max-width: 705px) {
-    padding: 0px 2rem;
-    flex-wrap: wrap-reverse;
+  @media (max-width: 768px) {
+    padding: 0px 1rem;
+    gap: 0.75rem;
+    height: auto;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center; // Explicitly align items to center for vertical alignment
   }
 `;
 
 const CompanyLogo = styled.img`
   height: 36px;
+  flex-shrink: 0;
+  display: block; // Visible by default
+
+  @media (max-width: 768px) {
+    height: 30px;
+  }
+
+  @media (max-width: 480px) {
+    display: none; // Hide full logo on small screens
+  }
 `;
 
-const HeaderSearchbar = styled(Searchbar)``;
+const CompanyHandLogo = styled.img`
+  display: none; // Hidden by default
+  height: 32px; // Consistent with the smallest size of the full logo
+  flex-shrink: 0;
+
+  @media (max-width: 480px) {
+    display: block; // Show hand logo on small screens
+    height: 36px;
+  }
+`;
+
+const HeaderSearchbar = styled(Searchbar)`
+  flex-grow: 1;
+  max-width: 400px;
+  min-width: 150px;
+
+  @media (max-width: 768px) {
+    order: 2;
+    min-width: 120px;
+    max-width: 250px;
+    & input {
+      font-size: 0.85rem;
+      padding-top: 0.5rem;
+      padding-bottom: 0.5rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    min-width: 100px;
+    max-width: 180px;
+    & input {
+      font-size: 0.8rem;
+    }
+  }
+`;
 
 const ButtonsContainer = styled.div`
   margin-left: auto;
@@ -100,6 +150,14 @@ const ButtonsContainer = styled.div`
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
+  flex-shrink: 0;
+
+  .header-campaign-btn .button-text .campaign-full-text {
+    display: inline;
+  }
+  .header-campaign-btn .button-text .campaign-short-text {
+    display: none;
+  }
 
   .header-campaign-btn {
     box-sizing: border-box;
@@ -132,6 +190,40 @@ const ButtonsContainer = styled.div`
     &:hover {
       background-color: #fff5eb;
       border-color: #2c1810;
+    }
+  }
+
+  @media (max-width: 768px) {
+    order: 3;
+    gap: 0.5rem;
+    margin-left: 0;
+
+    .header-campaign-btn,
+    .header-login-btn,
+    .header-user-btn {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.8rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .header-campaign-btn,
+    .header-login-btn,
+    .header-user-btn {
+      padding: 0.4rem 0.5rem;
+      font-size: 0.75rem;
+    }
+
+    .header-login-btn .button-text {
+      display: none;
+    }
+    /* The rule that previously hid all campaign button text (.header-campaign-btn .button-text { display: none; }) is removed. */
+    /* Instead, we now toggle visibility of the specific inner spans: */
+    .header-campaign-btn .button-text .campaign-full-text {
+      display: none;
+    }
+    .header-campaign-btn .button-text .campaign-short-text {
+      display: inline;
     }
   }
 `;
@@ -185,12 +277,13 @@ const DropdownItem = styled.div`
 export function Header() {
   const [searchValue, setSearchValue] = useState("");
   const [isFixed, setIsFixed] = useState(false);
-  const [lastScrollY, setLastScrollY] = useState(0);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const { user, profile, signOut } = useAuth();
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const headerContainerRef = useRef<HTMLElement>(null); // Ref for HeaderContainer
+  const [actualHeaderHeight, setActualHeaderHeight] = useState(0); // State for measured height
 
   const notHomepage = location.pathname != "/";
 
@@ -202,16 +295,31 @@ export function Header() {
       } else {
         setIsFixed(false);
       }
-
-      setLastScrollY(currentScrollY);
+      // Removed setLastScrollY to simplify, as it wasn't directly used for isFixed logic beyond comparison
     };
 
     window.addEventListener("scroll", handleScroll);
+    // Call handleScroll once on mount to set initial state if page is already scrolled
+    handleScroll();
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [lastScrollY]);
+  }, []); // Empty dependency array means this runs once on mount and cleans up on unmount
+
+  useEffect(() => {
+    const measureHeight = () => {
+      if (headerContainerRef.current) {
+        setActualHeaderHeight(headerContainerRef.current.offsetHeight);
+      }
+    };
+
+    measureHeight(); // Initial measurement
+    window.addEventListener("resize", measureHeight);
+
+    // Re-measure if the user logs in/out, as this changes button layout
+    // Also re-measure if path changes, as header content might differ
+  }, [location.pathname, user, profile]); // Dependencies that might change header height
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -281,11 +389,21 @@ export function Header() {
 
   return (
     <>
-      <HeaderSpacing $isFixed={isFixed} />
-      <HeaderContainer $isFixed={isFixed} $isTransparentPage={notHomepage}>
+      {isFixed && actualHeaderHeight > 0 && (
+        <HeaderSpacing $actualHeaderHeight={actualHeaderHeight} />
+      )}
+      <HeaderContainer
+        ref={headerContainerRef}
+        $isFixed={isFixed}
+        $isTransparentPage={notHomepage}
+      >
         <HeaderNav>
           <Link to="/" style={{ textDecoration: "none" }}>
             <CompanyLogo src={KvaliLogo} alt="Kvali Logo" />
+            <CompanyHandLogo
+              src="/logos/hand_logo_orange.svg"
+              alt="Kvali Hand Logo"
+            />
           </Link>
           <HeaderSearchbar value={searchValue} onChange={handleSearchChange} />
           <ButtonsContainer>
@@ -294,7 +412,10 @@ export function Header() {
               onClick={handleCampaignButtonClick}
               icon={<BsPiggyBank size={18} />}
             >
-              კამპანიის დაწყება
+              <>
+                <span className="campaign-full-text">კამპანიის დაწყება</span>
+                <span className="campaign-short-text">დაწყება</span>
+              </>
             </Button>
             {user ? (
               <UserDropdownWrapper ref={dropdownRef}>

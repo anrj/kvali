@@ -69,8 +69,8 @@ const SearchOverlay = styled.div<{ $isVisible: boolean }>`
   top: 100%;
   left: 0;
   right: 0;
-  min-width: 150%;
-  max-width: calc(100vw - 2rem);
+  min-width: 750px;
+  max-width: min(300%, calc(100vw - 2rem));
   background: white;
   border: 1px solid rgb(202 202 204);
   border-radius: 0.75rem;
@@ -82,6 +82,16 @@ const SearchOverlay = styled.div<{ $isVisible: boolean }>`
   display: ${(props) => (props.$isVisible ? "block" : "none")};
   margin-top: 0.25rem;
   padding: 0.75rem 0;
+
+  @media (max-width: 544px) {
+    width: min(80vw, 460px);
+    left: 0;
+    transform: translateX(0);
+    padding: 0.5rem 0;
+    max-height: 70vh;
+    min-width: unset;
+    right: auto;
+  }
 `;
 
 const SearchResultItem = styled.div`
@@ -99,6 +109,12 @@ const SearchResultItem = styled.div`
   &:last-child {
     border-bottom: none;
   }
+
+  @media (max-width: 544px) {
+    padding: 0.3rem 0.5rem;
+    align-items: center;
+    justify-content: flex-start;
+  }
 `;
 
 const CampaignImage = styled.img`
@@ -108,6 +124,12 @@ const CampaignImage = styled.img`
   object-fit: cover;
   margin-right: 0.75rem;
   flex-shrink: 0;
+
+  @media (max-width: 544px) {
+    width: 60px;
+    height: 37.5px;
+    margin-right: 0.5rem;
+  }
 `;
 
 const CampaignInfo = styled.div`
@@ -125,6 +147,11 @@ const CampaignName = styled.h4`
   text-overflow: ellipsis;
   white-space: nowrap;
   max-width: 100%;
+
+  @media (max-width: 544px) {
+    font-size: 0.8rem;
+    margin-bottom: 0.05rem;
+  }
 `;
 
 const CampaignDescription = styled.p`

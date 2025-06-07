@@ -85,7 +85,7 @@ export default function Button({
   return (
     <StyledButton type="button" {...rest} onClick={handleClick}>
       {iconElement && <ButtonIconWrapper>{iconElement}</ButtonIconWrapper>}
-      {children}
+      {children && <span className="button-text">{children}</span>}
     </StyledButton>
   );
 }

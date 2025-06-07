@@ -1,23 +1,23 @@
 @font-face {
-  font-family: 'TBCX';
-  src: url('./assets/fonts/TBCX-Regular.ttf') format('woff2');
+  font-family: "TBCX";
+  src: url("./assets/fonts/TBCX-Regular.ttf") format("woff2");
   font-weight: 400;
 }
 
 @font-face {
-  font-family: 'TBCX';
-  src: url('./assets/fonts/TBCX-Medium.ttf') format('woff2');
+  font-family: "TBCX";
+  src: url("./assets/fonts/TBCX-Medium.ttf") format("woff2");
   font-weight: 500;
 }
 
 @font-face {
-  font-family: 'TBCX';
-  src: url('./assets/fonts/TBCX-Bold.ttf') format('woff2');
+  font-family: "TBCX";
+  src: url("./assets/fonts/TBCX-Bold.ttf") format("woff2");
   font-weight: 700;
 }
 
 :root {
-  font-family: 'TBCX', system-ui, Helvetica, Arial, sans-serif;
+  font-family: "TBCX", system-ui, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
@@ -31,6 +31,15 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+* {
+  box-sizing: border-box;
+}
+
+html {
+  overflow-x: hidden;
+  width: 100%;
+}
+
 body {
   margin: 0;
   width: 100%;
@@ -38,6 +47,8 @@ body {
   min-width: 320px;
   min-height: 100vh;
   font-size: 14px;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 h1 {

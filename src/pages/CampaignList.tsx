@@ -18,14 +18,27 @@ const FilterRow = styled.div`
   padding-top: 1.3rem;
   margin-bottom: 0.5rem;
   gap: 0.5rem;
+  align-items: center;
 
   border-top: 1px dotted #45260a60;
+
+  @media (max-width: 768px) {
+    padding-top: 1rem;
+    margin-bottom: 0.3rem;
+    gap: 0.3rem;
+  }
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
 `;
 
 const FilterButton = styled(Button)`
-  // ADD A SIDEBAR FOR FILTERING OPTIONS
   padding: 0.5rem;
-  margin-left: 5.5rem;
   background-color: #e0e0e0;
   color: #0e0e0e;
   transition: background-color 0.3s ease;
@@ -33,12 +46,31 @@ const FilterButton = styled(Button)`
   &:hover {
     background-color: #d0d0d0;
   }
+
+  @media (max-width: 768px) {
+    margin-left: 2rem;
+    padding: 0.4rem;
+  }
+  @media (max-width: 480px) {
+    margin-left: 0;
+    align-self: flex-start;
+  }
 `;
 
 const TabGroup = styled.div`
   display: flex;
   align-items: center;
   gap: 0.3rem;
+  margin-left: 5.5rem;
+
+  @media (max-width: 768px) {
+    margin-left: 2rem;
+  }
+
+  @media (max-width: 480px) {
+    margin-left: 0;
+    flex-wrap: wrap;
+  }
 `;
 
 const TabButton = styled(Button)<{ $isActive?: boolean }>`
@@ -59,6 +91,15 @@ const TabButton = styled(Button)<{ $isActive?: boolean }>`
     background-color: #f3bf92;
     color: #555555;
   }
+
+  @media (max-width: 768px) {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.6rem;
+  }
+  @media (max-width: 480px) {
+    padding: 0.5rem 0.7rem;
+    font-size: 0.55rem;
+  }
 `;
 
 const CampaignListContainer = styled.div`
@@ -68,6 +109,23 @@ const CampaignListContainer = styled.div`
   grid-column-gap: 0.8rem;
   grid-row-gap: 0.8rem;
   margin: 0rem 4.6rem;
+  padding-bottom: 2rem;
+
+  @media (max-width: 992px) {
+    margin: 0 2rem;
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+    grid-column-gap: 0.6rem;
+    grid-row-gap: 0.6rem;
+    margin: 0 1rem;
+  }
+
+  @media (max-width: 480px) {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    margin: 0 0.5rem;
+  }
 `;
 
 interface Campaign {
@@ -148,8 +206,10 @@ export default function CampaignList() {
     <>
       <CampaignsPage>
         <FilterRow>
-          <FilterButton icon={<RiListSettingsLine size={16} />}></FilterButton>
           <TabGroup>
+            <FilterButton
+              icon={<RiListSettingsLine size={16} />}
+            ></FilterButton>
             <TabButton
               onClick={() => handleFilterChange(1)}
               $isActive={activeFilterType === 1}

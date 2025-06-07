@@ -13,6 +13,14 @@ const PageContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  @media (max-width: 768px) {
+    padding: 1.5rem 2rem;
+  }
+
+  @media (max-width: 480px) {
+    padding: 1rem;
+  }
 `;
 
 const FormContainer = styled.form`
@@ -25,6 +33,17 @@ const FormContainer = styled.form`
   border-radius: 16px;
   box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.1);
   background-color: #fff;
+
+  @media (max-width: 768px) {
+    padding: 1.5rem;
+    border-radius: 12px;
+  }
+
+  @media (max-width: 480px) {
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0);
+  }
 `;
 
 const FormContent = styled.div`
@@ -56,6 +75,16 @@ const FormTitle = styled.h1`
   color: #140e0e;
   margin-bottom: 1rem;
   text-align: center;
+
+  @media (max-width: 768px) {
+    font-size: 1.6rem;
+    margin-bottom: 0.75rem;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+  }
 `;
 
 const Label = styled.label`
@@ -93,6 +122,17 @@ const TextArea = styled.textarea<{ $hasError?: boolean }>`
 
   &::placeholder {
     font-family: "TBCX", sans-serif;
+  }
+
+  @media (max-width: 768px) {
+    min-height: 120px;
+    font-size: 0.95rem;
+  }
+
+  @media (max-width: 480px) {
+    min-height: 100px;
+    font-size: 0.9rem;
+    padding: 0.6rem;
   }
 `;
 
@@ -148,6 +188,10 @@ const ThumbnailPlaceholder = styled.div`
   text-align: center;
   padding: 1rem;
   color: #666;
+
+  @media (max-width: 480px) {
+    padding: 0.75rem;
+  }
 `;
 
 const ThumbnailIcon = styled.div`
@@ -178,16 +222,41 @@ const ThumbnailIcon = styled.div`
     width: 2px;
     height: 16px;
   }
+
+  @media (max-width: 480px) {
+    width: 2.5rem;
+    height: 2.5rem;
+    margin-bottom: 0.375rem;
+
+    &::before {
+      width: 12px;
+      height: 2px;
+    }
+
+    &::after {
+      width: 2px;
+      height: 12px;
+    }
+  }
 `;
 
 const ThumbnailText = styled.span`
   font-size: 0.9rem;
   margin-bottom: 0.25rem;
+
+  @media (max-width: 480px) {
+    font-size: 0.8rem;
+    margin-bottom: 0.2rem;
+  }
 `;
 
 const ThumbnailSubtext = styled.span`
   font-size: 0.75rem;
   color: #999;
+
+  @media (max-width: 480px) {
+    font-size: 0.65rem;
+  }
 `;
 
 const Select = styled.select<{ $hasError?: boolean }>`

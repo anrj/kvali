@@ -23,6 +23,7 @@ const SignInPageBackground = styled.div`
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+
 `;
 
 const SignInPageContainer = styled.div`
@@ -37,6 +38,18 @@ const SignInPageContainer = styled.div`
 
   width: 375px;
   min-height: 400px;
+
+  @media (max-width: 768px) {
+    box-shadow: none;
+    border: 0px;
+    width: 85vw;
+  }
+
+  @media (max-width: 480px) {
+    box-shadow: none;
+    border: 0px;
+    width: 85vw;
+  }
 `;
 
 const LogoDiv = styled.div`
