@@ -62,7 +62,7 @@ const NavColRow1 = styled.div`
     justify-content: space-between;
     gap: 1rem;
     width: 100%;
-    margin-left: 0.75rem;
+    margin-left: 0.7rem;
   }
 `;
 

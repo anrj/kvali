@@ -222,7 +222,10 @@ export function Hero() {
             >
               კამპანიები
             </Button>
-            <Button className="hero-learnmore-btn" scrollsTo="cta-section">
+            <Button
+              className="hero-learnmore-btn"
+              scrollsTo="learn-more-section"
+            >
               <span>მეტის გაგება ↓</span>
             </Button>
           </div>
