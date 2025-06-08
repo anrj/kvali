@@ -189,6 +189,20 @@ export default function LoginPage() {
     }
   }, [user, navigate, returnTo]);
 
+  const handleGoogleSignIn = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}${returnTo || '/campaigns'}`
+      }
+    });
+    
+    if (error) {
+      console.error('Error signing in with Google:', error.message);
+      setError('Google-ით შესვლისას მოხდა შეცდომა');
+    }
+  };
+
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
     if (error) setError("");
@@ -242,7 +256,10 @@ export default function LoginPage() {
             <Button icon={"/logos/facebook-svgrepo-com.svg"}>
               Facebook-ით შესვლა
             </Button>
-            <Button icon={"/logos/google-color-svgrepo-com.svg"}>
+            <Button 
+              icon={"/logos/google-color-svgrepo-com.svg"}
+              onClick={handleGoogleSignIn}
+            >
               Google-ით შესვლა
             </Button>
           </ButtonDiv>
