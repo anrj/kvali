@@ -5,6 +5,7 @@ import supabase from "../utils/supabase";
 import { ProgressBar } from "../components/atomic/ProgressBar";
 import Button from "../components/atomic/Button";
 import LoadingSpinner from "../components/atomic/LoadingSpinner";
+import { useAuth } from "../hooks/useAuth";
 
 const CampaignContainer = styled.div`
   min-height: 100vh;
@@ -202,9 +203,37 @@ interface Campaign {
 export default function Campaign() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [campaign, setCampaign] = useState<Campaign | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // PayPal redirect function
+  const handlePayPalRedirect = () => {
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+
+    const paypalUrl =
+      import.meta.env.VITE_PAYPAL_ENVIRONMENT === "sandbox"
+        ? "https://www.sandbox.paypal.com/cgi-bin/webscr"
+        : "https://www.paypal.com/cgi-bin/webscr";
+
+    const businessEmail = import.meta.env.VITE_PAYPAL_BUSINESS_EMAIL;
+
+    const params = new URLSearchParams({
+      cmd: "_donations",
+      business: businessEmail || "sb-cd43ii43397377@business.example.com",
+      item_name: `Donate to ${campaign?.title || "Kvali"}`,
+      currency_code: "USD",
+      return: `${window.location.origin}/campaign/${id}?payment=success`,
+      cancel_return: `${window.location.origin}/campaign/${id}?payment=cancelled`,
+      notify_url: `${window.location.origin}/api/paypal-ipn`,
+    });
+
+    window.location.href = `${paypalUrl}?${params.toString()}`;
+  };
 
   // Fetch campaign details from Supabase
   useEffect(() => {
@@ -315,7 +344,9 @@ export default function Campaign() {
               <StatValue>₾{campaign.goal_amount.toLocaleString()}</StatValue>
             </StatRow>
           </CampaignStats>
-          <DonateButton>ფულის შეწირვა</DonateButton>
+          <DonateButton onClick={handlePayPalRedirect}>
+            ფულის შეწირვა
+          </DonateButton>
         </CampaignInfo>
       </MobileTopSection>
 
@@ -368,7 +399,9 @@ export default function Campaign() {
               <StatValue>₾{campaign.goal_amount.toLocaleString()}</StatValue>
             </StatRow>
           </CampaignStats>
-          <DonateButton>ფულის შეწირვა</DonateButton>
+          <DonateButton onClick={handlePayPalRedirect}>
+            ფულის შეწირვა
+          </DonateButton>
         </CampaignInfo>
       </DesktopLayout>
     </CampaignContainer>
