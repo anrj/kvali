@@ -1,6 +1,6 @@
-<p align="center">
-    <img src="./public/logos/full_logo.svg" alt="Kvali Logo" width="500"/>
-</p>
+<div align="center" style="background-color: #f5f5f5; padding: 20px; border-radius: 10px; margin: 20px 0;">
+    <img src="./public/logos/full_logo.svg" alt="Kvali Logo" width="350"/>
+</div>
 
 ---
 
@@ -11,14 +11,12 @@
   <a href="https://vitejs.dev/"><img src="https://img.shields.io/badge/vite-%239269fe.svg?style=for-the-badge&logo=vite&logoColor=yellow&border"/></a>
   <a href="https://styled-components.com/"><img src="https://img.shields.io/badge/styled--components-742b66.svg?style=for-the-badge&logo=styled-components&logoColor=#e682d5"/></a>
   <a href="https://bunjs.dev/"><img src="https://img.shields.io/badge/Bun.js-febbd0.svg?style=for-the-badge&logo=bun&logoColor=f9f1e1"/></a>
-  <a href="https://www.cloudflare.com/"><img src="https://img.shields.io/badge/cloudflare-white.svg?style=for-the-badge&logo=cloudflare&logoColor=orange"/></a>
 </p>
 
-A Georgian fundraising and crowdfunding platform built with React and Supabase for the database and authentication.
-\
-[Visit the website](https://kvali.pages.dev/)
+## 🇬🇪 A Georgian fundraising and crowdfunding platform.
+### [Visit the website](https://kvali.pages.dev/)
 
-> [!WARNING] \
-> If you visit the website and it seems that the campaigns aren't loading, it's because supabase has paused the project as it's on free tier
+> [!WARNING]
+> If you visit the website and it seems that the campaigns aren't loading, it's because **supabase** has paused the project as it's on free tier
 
 ### Build locally with `bun run build` or run a development server `bun run dev`
